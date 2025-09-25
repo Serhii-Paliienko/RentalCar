@@ -1,0 +1,7 @@
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--sp-8) var(--sp-4);
+  display: grid;
+  gap: var(--sp-6);
+}

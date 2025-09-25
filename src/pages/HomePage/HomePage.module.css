@@ -1,0 +1,26 @@
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--sp-8) var(--sp-4);
+}
+.banner {
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: var(--sp-8);
+}
+.title {
+  font-size: var(--fs-2xl);
+  margin: 0 0 var(--sp-4);
+}
+.text {
+  color: var(--clr-muted);
+  margin: 0 0 var(--sp-6);
+}
+.cta {
+  display: inline-block;
+  padding: var(--sp-3) var(--sp-6);
+  background: var(--clr-primary);
+  color: white;
+  border-radius: var(--radius);
+  border: none;
+}

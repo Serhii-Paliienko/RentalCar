@@ -1,0 +1,11 @@
+.wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--sp-6);
+}
+.btn {
+  border: 1px solid var(--clr-border);
+  background: white;
+  padding: var(--sp-2) var(--sp-6);
+  border-radius: var(--radius);
+}

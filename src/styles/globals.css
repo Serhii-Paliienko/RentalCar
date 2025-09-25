@@ -1,0 +1,24 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  font-size: var(--fs-md);
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 2px;
+}

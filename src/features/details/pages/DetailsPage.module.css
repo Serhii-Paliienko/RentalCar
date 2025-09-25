@@ -1,0 +1,33 @@
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--sp-8) var(--sp-4);
+  display: grid;
+  gap: var(--sp-6);
+}
+.header {
+  display: grid;
+  gap: var(--sp-2);
+}
+.title {
+  font-size: var(--fs-2xl);
+  margin: 0;
+}
+.meta {
+  color: var(--clr-muted);
+}
+.content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--sp-6);
+}
+.img {
+  width: 100%;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+}
+@media (max-width: 900px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+}

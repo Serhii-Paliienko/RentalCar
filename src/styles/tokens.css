@@ -1,0 +1,27 @@
+:root {
+  /* colors */
+  --clr-bg: #ffffff;
+  --clr-text: #0b0b0b;
+  --clr-muted: #6c757d;
+  --clr-primary: #0d6efd;
+  --clr-border: #e5e7eb;
+
+  /* spacing */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+
+  /* radii */
+  --radius: 12px;
+
+  /* typography */
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-md: 16px;
+  --fs-lg: 20px;
+  --fs-xl: 24px;
+  --fs-2xl: 32px;
+}

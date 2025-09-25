@@ -1,0 +1,11 @@
+.wrap {
+  padding: var(--sp-8);
+  text-align: center;
+}
+.code {
+  font-size: var(--fs-2xl);
+  margin-bottom: var(--sp-2);
+}
+.msg {
+  color: var(--clr-muted);
+}

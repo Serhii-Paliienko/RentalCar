@@ -1,0 +1,42 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.pnp.cjs
+
+# vite / build
+/dist
+/.vite
+.vite/
+.vite-temp/
+*.log
+
+# env
+.env
+.env.*
+!.env.example
+.env.local
+
+# editor
+.vscode
+.idea
+
+# os
+.DS_Store
+Thumbs.db
+
+# misc
+*.local
+*.cache
+.npmrc
+
+# tests/coverage
+coverage
+
+# lockfiles (по команде)
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock
+
+# custom
+.dev

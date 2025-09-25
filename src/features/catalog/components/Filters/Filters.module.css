@@ -1,0 +1,44 @@
+.form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
+}
+.control {
+  display: grid;
+  gap: var(--sp-2);
+}
+.label {
+  font-size: var(--fs-sm);
+  color: var(--clr-muted);
+}
+.input,
+.select {
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: var(--sp-2) var(--sp-3);
+  font: inherit;
+}
+.actions {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: end;
+}
+.button {
+  border: none;
+  background: var(--clr-primary);
+  color: white;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius);
+}
+.reset {
+  border: 1px solid var(--clr-border);
+  background: white;
+  color: inherit;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius);
+}
+@media (max-width: 900px) {
+  .form {
+    grid-template-columns: 1fr 1fr;
+  }
+}

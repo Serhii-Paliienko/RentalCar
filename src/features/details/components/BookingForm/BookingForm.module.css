@@ -1,0 +1,32 @@
+.form {
+  display: grid;
+  gap: var(--sp-3);
+  border: 1px solid var(--clr-border);
+  padding: var(--sp-4);
+  border-radius: var(--radius);
+}
+.row {
+  display: grid;
+  gap: var(--sp-2);
+}
+.label {
+  font-size: var(--fs-sm);
+  color: var(--clr-muted);
+}
+.input {
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: var(--sp-2) var(--sp-3);
+  font: inherit;
+}
+.btn {
+  border: none;
+  background: var(--clr-primary);
+  color: white;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius);
+}
+.error {
+  color: #b00020;
+  font-size: var(--fs-sm);
+}
