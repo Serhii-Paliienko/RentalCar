@@ -5,3 +5,32 @@
   display: grid;
   gap: var(--sp-6);
 }
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: var(--fs-2xl);
+  margin: 0;
+}
+
+.count {
+  color: var(--clr-muted);
+}
+
+.loaderWrap {
+  display: flex;
+  justify-content: center;
+  padding: var(--sp-6) 0;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.more {
+  margin-top: var(--sp-6);
+}

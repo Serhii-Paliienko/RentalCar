@@ -4,16 +4,33 @@ import { getCarById } from "@api/cars";
 import { formatMileage, formatPriceUsd } from "@utils/format";
 import Specs from "../components/Specs/Specs";
 import BookingForm from "../components/BookingForm/BookingForm";
+import Loader from "@components/Loader/Loader";
 import s from "./DetailsPage.module.css";
 
 export default function DetailsPage() {
   const { id } = useParams<{ id: string }>();
-  const { data: car } = useQuery({
+  const { data: car, status } = useQuery({
     queryKey: ["car", id],
     queryFn: () => getCarById(id!),
     enabled: !!id,
     staleTime: 300_000,
   });
+
+  if (status === "pending") {
+    return (
+      <main className={s.wrap}>
+        <Loader label="Loading car…" />
+      </main>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <main className={s.wrap}>
+        <p role="alert">Failed to load the car. Please try again.</p>
+      </main>
+    );
+  }
 
   if (!car) return null;
 

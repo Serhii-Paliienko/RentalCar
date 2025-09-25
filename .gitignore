@@ -1,15 +1,32 @@
 # dependencies
-/node_modules
+/node_modules/
 /.pnp
 .pnp.js
-.pnp.cjs
 
-# vite / build
-/dist
-/.vite
-.vite/
-.vite-temp/
+# build output
+/dist/
+/build/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 *.log
+
+# editor / system
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# vite
+/.vite/
+.vite-temp/
+
+# tests
+/coverage/
 
 # env
 .env
@@ -17,26 +34,12 @@
 !.env.example
 .env.local
 
-# editor
-.vscode
-.idea
+# cache
+/.cache/
+/tmp/
 
-# os
-.DS_Store
-Thumbs.db
-
-# misc
-*.local
-*.cache
-.npmrc
-
-# tests/coverage
-coverage
-
-# lockfiles (по команде)
-# package-lock.json
-# pnpm-lock.yaml
-# yarn.lock
+# storybook (если появится)
+/storybook-static/
 
 # custom
-.dev
+/.dev/

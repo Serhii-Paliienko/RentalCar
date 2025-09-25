@@ -1,5 +1,14 @@
 import type { CatalogFilters } from "@api/types";
 
+function clean(v?: string) {
+  if (!v) return "";
+  return v.trim();
+}
+function digits(v?: string) {
+  if (!v) return "";
+  return v.replace(/[^\d]/g, "");
+}
+
 export function readFilters(
   search: string
 ): Required<
@@ -7,18 +16,37 @@ export function readFilters(
 > {
   const sp = new URLSearchParams(search);
   return {
-    brand: sp.get("brand") ?? "",
-    price: sp.get("price") ?? "",
-    minMileage: sp.get("minMileage") ?? "",
-    maxMileage: sp.get("maxMileage") ?? "",
+    brand: clean(sp.get("brand") ?? ""),
+    price: digits(sp.get("price") ?? ""),
+    minMileage: digits(sp.get("minMileage") ?? ""),
+    maxMileage: digits(sp.get("maxMileage") ?? ""),
   };
 }
 
-export function buildSearch(filters: Partial<CatalogFilters>) {
+export function buildSearch(values: {
+  brand?: string;
+  price?: string;
+  minMileage?: string;
+  maxMileage?: string;
+}) {
   const sp = new URLSearchParams();
-  if (filters.brand) sp.set("brand", String(filters.brand));
-  if (filters.price) sp.set("price", String(filters.price));
-  if (filters.minMileage) sp.set("minMileage", String(filters.minMileage));
-  if (filters.maxMileage) sp.set("maxMileage", String(filters.maxMileage));
-  return `?${sp.toString()}`;
+
+  const brand = clean(values.brand);
+  const price = digits(values.price);
+  let min = digits(values.minMileage);
+  let max = digits(values.maxMileage);
+
+  if (min && max && Number(min) > Number(max)) {
+    const t = min;
+    min = max;
+    max = t;
+  }
+
+  if (brand) sp.set("brand", brand);
+  if (price) sp.set("price", price);
+  if (min) sp.set("minMileage", min);
+  if (max) sp.set("maxMileage", max);
+
+  const q = sp.toString();
+  return q ? `?${q}` : "";
 }

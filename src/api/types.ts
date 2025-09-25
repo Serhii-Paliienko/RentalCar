@@ -1,4 +1,4 @@
-export type Car = {
+export interface Car {
   id: string;
   year: number;
   brand: string;
@@ -15,28 +15,42 @@ export type Car = {
   address: string;
   rentalConditions: string[];
   mileage: number;
-};
+}
 
-export type CarsResponse = {
+export interface CarsResponseRaw {
+  cars: Car[];
+  totalCars: number | string;
+  page: number | string;
+  totalPages: number | string;
+}
+
+export interface CarsResponse {
   cars: Car[];
   totalCars: number;
   page: number;
   totalPages: number;
-};
+}
 
 export type BrandsResponse = string[];
-
-export type CatalogFilters = {
+export interface CatalogFilters {
   brand?: string;
   price?: string;
   minMileage?: string;
   maxMileage?: string;
   page?: string;
   limit?: string;
-};
+}
+export interface CarsQuery {
+  brand?: string;
+  price?: string;
+  minMileage?: string;
+  maxMileage?: string;
+  page: string;
+  limit: string;
+}
 
-export type NormalizedError = {
+export interface NormalizedError {
   code: string;
   message: string;
   details?: unknown;
-};
+}
