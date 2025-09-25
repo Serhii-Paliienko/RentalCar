@@ -5,9 +5,7 @@ import { TanStackProvider } from "@app/providers/TanStackProvider";
 import { ToastProvider } from "@app/providers/ToastProvider";
 import router from "@app/router";
 
-// normalize — глобально ОДИН раз
 import "modern-normalize/modern-normalize.css";
-// токены + глобальные стили
 import "@styles/tokens.css";
 import "@styles/globals.css";
 

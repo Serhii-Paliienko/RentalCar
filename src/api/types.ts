@@ -6,15 +6,15 @@ export type Car = {
   type: string;
   img: string;
   description: string;
-  fuelConsumption: string; // e.g., "10.5"
-  engineSize: string; // e.g., "3.6L V6"
+  fuelConsumption: string;
+  engineSize: string;
   accessories: string[];
   functionalities: string[];
-  rentalPrice: string; // e.g., "40"
+  rentalPrice: string;
   rentalCompany: string;
   address: string;
   rentalConditions: string[];
-  mileage: number; // e.g., 5858
+  mileage: number;
 };
 
 export type CarsResponse = {

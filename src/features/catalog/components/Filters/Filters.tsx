@@ -29,7 +29,6 @@ export default function Filters() {
       enableReinitialize
       validationSchema={Schema}
       onSubmit={(values) => {
-        // reset to page=1 on filters change
         const q = buildSearch(values);
         nav(`/catalog${q}`, { replace: true });
       }}
