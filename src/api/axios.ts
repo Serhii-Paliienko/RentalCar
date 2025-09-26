@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import type { NormalizedError } from "./types";
+import type { NormalizedError } from "@api/types";
 
 export const api = axios.create({
   baseURL: "https://car-rental-api.goit.global",

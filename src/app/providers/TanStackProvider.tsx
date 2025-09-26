@@ -7,12 +7,16 @@ export function TanStackProvider({ children }: { children: ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            retry: 1,
-            refetchOnWindowFocus: false,
             staleTime: 60_000,
+            gcTime: 10 * 60_000,
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: false,
+            refetchOnMount: false,
+            retry: 1,
           },
         },
       })
   );
+
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }

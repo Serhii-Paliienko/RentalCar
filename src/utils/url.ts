@@ -1,34 +1,42 @@
 import type { CatalogFilters } from "@api/types";
 
-function clean(v?: string) {
-  if (!v) return "";
-  return v.trim();
-}
-function digits(v?: string) {
-  if (!v) return "";
-  return v.replace(/[^\d]/g, "");
+function clean(v: unknown): string {
+  if (v == null) return "";
+  return String(v).trim();
 }
 
-export function readFilters(
-  search: string
-): Required<
+function digits(v: unknown): string | undefined {
+  if (v == null) return undefined;
+  const cleaned = String(v).replace(/[^\d]/g, "").trim();
+  return cleaned ? cleaned : undefined;
+}
+
+type FiltersShape = Required<
   Pick<CatalogFilters, "brand" | "price" | "minMileage" | "maxMileage">
-> {
-  const sp = new URLSearchParams(search);
+>;
+
+export function readFilters(search: string): FiltersShape {
+  const sp = new URLSearchParams(search || "");
+
+  const brand = clean(sp.get("brand"));
+  const price = digits(sp.get("price")) ?? "";
+
+  let min = digits(sp.get("minMileage"));
+  let max = digits(sp.get("maxMileage"));
+
+  if (min && max && Number(min) > Number(max)) {
+    [min, max] = [max, min];
+  }
+
   return {
-    brand: clean(sp.get("brand") ?? ""),
-    price: digits(sp.get("price") ?? ""),
-    minMileage: digits(sp.get("minMileage") ?? ""),
-    maxMileage: digits(sp.get("maxMileage") ?? ""),
+    brand,
+    price,
+    minMileage: min ?? "",
+    maxMileage: max ?? "",
   };
 }
 
-export function buildSearch(values: {
-  brand?: string;
-  price?: string;
-  minMileage?: string;
-  maxMileage?: string;
-}) {
+export function buildSearch(values: Partial<FiltersShape>): string {
   const sp = new URLSearchParams();
 
   const brand = clean(values.brand);
@@ -37,9 +45,7 @@ export function buildSearch(values: {
   let max = digits(values.maxMileage);
 
   if (min && max && Number(min) > Number(max)) {
-    const t = min;
-    min = max;
-    max = t;
+    [min, max] = [max, min];
   }
 
   if (brand) sp.set("brand", brand);

@@ -14,26 +14,33 @@
   color: var(--clr-muted);
 }
 
+.muted {
+  font-size: var(--fs-xs);
+  color: var(--clr-muted);
+  margin-left: 6px;
+}
+
 .input,
 .select {
   border: 1px solid var(--clr-border);
-  border-radius: var(--radius);
   padding: var(--sp-2) var(--sp-3);
-  font: inherit;
+  border-radius: var(--radius);
+  background: #fff;
 }
 
 .actions {
   display: flex;
-  gap: var(--sp-4);
   align-items: end;
+  gap: var(--sp-2);
 }
 
 .button {
-  border: none;
   background: var(--clr-primary);
-  color: white;
+  color: #fff;
+  border: 1px solid var(--clr-primary);
   padding: var(--sp-2) var(--sp-4);
   border-radius: var(--radius);
+  cursor: pointer;
 }
 
 .reset {
@@ -42,6 +49,7 @@
   color: inherit;
   padding: var(--sp-2) var(--sp-4);
   border-radius: var(--radius);
+  cursor: pointer;
 }
 
 @media (max-width: 900px) {

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "start": "vite preview --port 4173 --strictPort",
     "preview": "vite preview",
     "lint": "eslint ."
   },
@@ -32,5 +33,10 @@
     "typescript": "latest",
     "vite": "latest",
     "vite-tsconfig-paths": "latest"
-  }
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
+  "packageManager": "npm@10.8.1"
 }

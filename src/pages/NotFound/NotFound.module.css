@@ -1,11 +1,27 @@
 .wrap {
-  padding: var(--sp-8);
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  gap: var(--sp-4);
   text-align: center;
+  padding: var(--sp-8);
 }
-.code {
+
+.title {
   font-size: var(--fs-2xl);
-  margin-bottom: var(--sp-2);
+  margin: 0;
 }
-.msg {
+
+.text {
   color: var(--clr-muted);
+  font-size: var(--fs-md);
+}
+
+.btn {
+  border: 1px solid var(--clr-primary);
+  background: var(--clr-primary);
+  color: #fff;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius);
+  cursor: pointer;
 }

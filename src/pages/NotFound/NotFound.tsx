@@ -3,12 +3,16 @@ import s from "./NotFound.module.css";
 
 export default function NotFound() {
   return (
-    <main className={s.wrap}>
-      <div className={s.code}>404</div>
-      <p className={s.msg}>Page not found.</p>
-      <p>
-        <Link to="/catalog">Go to catalog</Link>
+    <main className={s.wrap} aria-labelledby="nf-title">
+      <h1 id="nf-title" className={s.title}>
+        Page not found
+      </h1>
+      <p className={s.text}>
+        The page you are looking for doesn’t exist or was moved.
       </p>
+      <Link to="/" className={s.btn}>
+        Go home
+      </Link>
     </main>
   );
 }

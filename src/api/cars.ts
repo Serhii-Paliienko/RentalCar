@@ -1,24 +1,28 @@
-import { api } from "./axios";
+import { api, toNormalizedError } from "./axios";
 import type {
   BrandsResponse,
   Car,
   CarsResponse,
   CarsResponseRaw,
   CarsQuery,
-} from "./types";
+} from "@api/types";
 
 export async function getBrands() {
-  const res = await api.get<BrandsResponse>("/brands");
-  return res.data;
+  try {
+    const res = await api.get<BrandsResponse>("/brands");
+    return res.data;
+  } catch (e) {
+    throw toNormalizedError(e);
+  }
 }
 
 function normalizeIntString(v?: string): string | undefined {
-  if (!v) return undefined;
-  const cleaned = v.replace(/\s+/g, "").trim();
+  if (v == null) return undefined;
+  const s = String(v);
+  const cleaned = s.replace(/[^\d]/g, "").trim();
   if (!cleaned) return undefined;
-  const n = Number(cleaned);
-  if (!Number.isFinite(n)) return undefined;
-  return String(Math.trunc(n));
+  const n = Number.parseInt(cleaned, 10);
+  return Number.isFinite(n) ? String(n) : undefined;
 }
 
 function normalizeCarsResponse(raw: CarsResponseRaw): CarsResponse {
@@ -45,37 +49,46 @@ export async function getCars(params: CarsQuery): Promise<CarsResponse> {
   const priceClean = normalizeIntString(price);
   if (priceClean) q.rentalPrice = priceClean;
 
-  const minClean = normalizeIntString(minMileage);
-  const maxClean = normalizeIntString(maxMileage);
-
-  if (minClean && maxClean && Number(minClean) > Number(maxClean)) {
-    q.minMileage = maxClean;
-    q.maxMileage = minClean;
-  } else {
-    if (minClean) q.minMileage = minClean;
-    if (maxClean) q.maxMileage = maxClean;
+  let min = normalizeIntString(minMileage);
+  let max = normalizeIntString(maxMileage);
+  if (min && max && Number(min) > Number(max)) {
+    [min, max] = [max, min];
   }
+  if (min) q.minMileage = min;
+  if (max) q.maxMileage = max;
 
   if (import.meta.env.DEV) {
     console.debug("[api] GET /cars params:", q);
   }
 
-  const res = await api.get<CarsResponseRaw>("/cars", { params: q });
-  const data = normalizeCarsResponse(res.data);
+  try {
+    const res = await api.get<CarsResponseRaw>("/cars", { params: q });
+    let data = normalizeCarsResponse(res.data);
 
-  if (import.meta.env.DEV) {
-    console.debug("[api] /cars response:", {
-      page: data.page,
-      totalPages: data.totalPages,
-      totalCars: data.totalCars,
-      count: data.cars.length,
-    });
+    if (priceClean) {
+      const before = data.cars.length;
+      const exact = data.cars.filter(
+        (c) => String(c.rentalPrice).trim() === priceClean
+      );
+      if (import.meta.env.DEV) {
+        console.debug(
+          `[api] post-filter price === ${priceClean}: ${before} → ${exact.length}`
+        );
+      }
+      data = { ...data, cars: exact };
+    }
+
+    return data;
+  } catch (e) {
+    throw toNormalizedError(e);
   }
-
-  return data;
 }
 
 export async function getCarById(id: string) {
-  const res = await api.get<Car>(`/cars/${id}`);
-  return res.data;
+  try {
+    const res = await api.get<Car>(`/cars/${id}`);
+    return res.data;
+  } catch (e) {
+    throw toNormalizedError(e);
+  }
 }

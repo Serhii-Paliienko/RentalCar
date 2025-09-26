@@ -1,14 +1,40 @@
-import { createBrowserRouter } from "react-router-dom";
-import HomePage from "@pages/HomePage/HomePage";
-import CatalogPage from "@features/catalog/pages/CatalogPage";
-import DetailsPage from "@features/details/pages/DetailsPage";
-import NotFound from "@pages/NotFound/NotFound";
+import { lazy, Suspense } from "react";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import Loader from "@components/Loader/Loader";
+import Header from "@components/Header/Header";
+
+const HomePage = lazy(() => import("@pages/HomePage/HomePage"));
+const CatalogPage = lazy(() => import("@features/catalog/pages/CatalogPage"));
+const NotFound = lazy(() => import("@pages/NotFound/NotFound"));
+
+function Root() {
+  return (
+    <>
+      <Header />
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
+    </>
+  );
+}
 
 const router = createBrowserRouter([
-  { path: "/", element: <HomePage /> },
-  { path: "/catalog", element: <CatalogPage /> },
-  { path: "/catalog/:id", element: <DetailsPage /> },
-  { path: "*", element: <NotFound /> },
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: (
+      <Suspense fallback={<Loader />}>
+        <NotFound />
+      </Suspense>
+    ),
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "catalog", element: <CatalogPage /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
 ]);
 
-export default router;
+export default function AppRouter() {
+  return <RouterProvider router={router} />;
+}

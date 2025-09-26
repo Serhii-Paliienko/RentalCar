@@ -17,7 +17,7 @@ export default function Filters() {
   const { data: brands } = useQuery({
     queryKey: ["brands"],
     queryFn: () => getBrands(),
-    staleTime: 86_400_000,
+    staleTime: 86_400_000, // 24h
   });
 
   const nav = useNavigate();
@@ -35,19 +35,13 @@ export default function Filters() {
       }}
     >
       {({ errors, resetForm }) => (
-        <Form className={s.form} role="search">
+        <Form className={s.form} role="search" aria-label="Catalog filters">
           <div className={s.control}>
             <label className={s.label} htmlFor="brand">
               Brand
             </label>
-            <Field
-              as="select"
-              id="brand"
-              name="brand"
-              className={s.select}
-              aria-invalid={!!errors.brand}
-            >
-              <option value="">Any</option>
+            <Field as="select" id="brand" name="brand" className={s.select}>
+              <option value="">All brands</option>
               {(brands ?? []).map((b) => (
                 <option key={b} value={b}>
                   {b}
@@ -58,13 +52,15 @@ export default function Filters() {
 
           <div className={s.control}>
             <label className={s.label} htmlFor="price">
-              Price, $/day
+              Price, $/day <span className={s.muted}>(exact match)</span>
             </label>
             <Field
               id="price"
               name="price"
               type="number"
               inputMode="numeric"
+              min="0"
+              step="1"
               className={s.input}
               aria-invalid={!!errors.price}
               placeholder="e.g. 50"
@@ -80,8 +76,11 @@ export default function Filters() {
               name="minMileage"
               type="number"
               inputMode="numeric"
+              min="0"
+              step="1"
               className={s.input}
               aria-invalid={!!errors.minMileage}
+              placeholder="e.g. 1 000"
             />
           </div>
 
@@ -94,8 +93,11 @@ export default function Filters() {
               name="maxMileage"
               type="number"
               inputMode="numeric"
+              min="0"
+              step="1"
               className={s.input}
               aria-invalid={!!errors.maxMileage}
+              placeholder="e.g. 5 000"
             />
           </div>
 

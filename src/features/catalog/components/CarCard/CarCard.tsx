@@ -18,7 +18,7 @@ export default function CarCard({ car }: { car: Car }) {
         loading="lazy"
       />
       <div className={s.body}>
-        <div className={s.row}>
+        <div className={s.head}>
           <h3 className={s.title}>
             {car.brand} {car.model}
           </h3>
@@ -26,9 +26,11 @@ export default function CarCard({ car }: { car: Car }) {
             {formatPriceUsd(car.rentalPrice)}
           </div>
         </div>
+
         <div className={s.meta}>
           {car.year} • {car.type} • {formatMileage(car.mileage)}
         </div>
+
         <div className={s.actions}>
           <Link to={`/catalog/${car.id}`} className={`${s.btn} ${s.primary}`}>
             Read more
