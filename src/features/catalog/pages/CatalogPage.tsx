@@ -14,6 +14,7 @@ export default function CatalogPage() {
     cars,
     hasAnyFilter,
     isEmptyAfterAllPages,
+    isUpdatingInBackground,
     fetchNextPage,
     hasNextPage,
     isLoading,
@@ -27,14 +28,20 @@ export default function CatalogPage() {
       minMileage: filters.minMileage || "",
       maxMileage: filters.maxMileage || "",
     },
-    "12"
+    {
+      limit: "12",
+      instantFromCache: true,
+      placeholderCap: 200,
+    }
   );
 
   if (error) {
     return (
       <main className={s.wrap}>
         <Filters />
-        <div className={s.state}>Something went wrong. Try again.</div>
+        <div className={s.state} role="status" aria-live="polite">
+          Something went wrong. Try again.
+        </div>
       </main>
     );
   }
@@ -42,6 +49,12 @@ export default function CatalogPage() {
   return (
     <main className={s.wrap}>
       <Filters />
+
+      {isUpdatingInBackground && (
+        <div className={s.state} role="status" aria-live="polite">
+          Updating results…
+        </div>
+      )}
 
       {isLoading && (
         <ul className={s.grid} aria-busy="true" aria-live="polite">
@@ -54,7 +67,7 @@ export default function CatalogPage() {
       {!isLoading && cars.length > 0 && (
         <ul className={s.grid} aria-live="polite">
           {cars.map((c) => (
-            <li key={c.id}>
+            <li key={c.id} data-car-id={c.id}>
               <CarCard car={c} />
             </li>
           ))}
@@ -70,9 +83,16 @@ export default function CatalogPage() {
             className={s.moreBtn}
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage || isRefetching}
+            aria-busy={isFetchingNextPage || isRefetching}
+            aria-label="Load more cars"
           >
             {isFetchingNextPage ? "Loading…" : "Load more"}
           </button>
+        </div>
+      )}
+      {hasAnyFilter && !isLoading && !isEmptyAfterAllPages && !hasNextPage && (
+        <div className={s.state} role="note" aria-live="polite">
+          End of results.
         </div>
       )}
     </main>
