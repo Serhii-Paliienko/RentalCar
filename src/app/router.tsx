@@ -1,10 +1,11 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import Loader from "@components/Loader/Loader";
 import Header from "@components/Header/Header";
+import Loader from "@components/Loader/Loader";
 
 const HomePage = lazy(() => import("@pages/HomePage/HomePage"));
 const CatalogPage = lazy(() => import("@features/catalog/pages/CatalogPage"));
+const DetailsPage = lazy(() => import("@features/details/pages/DetailsPage"));
 const NotFound = lazy(() => import("@pages/NotFound/NotFound"));
 
 function Root() {
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "catalog", element: <CatalogPage /> },
+      { path: "catalog/:id", element: <DetailsPage /> },
       { path: "*", element: <NotFound /> },
     ],
   },

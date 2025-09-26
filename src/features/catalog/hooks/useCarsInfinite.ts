@@ -3,10 +3,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getCars } from "@api/cars";
 import type { CarsQuery, Car } from "@api/types";
 
-/**
- * Авто-инкрементальная загрузка страниц каталога с поддержкой «строгой цены».
- * Ключ кэша — ["cars", filters, limit] (сброс при изменении фильтров — по ТЗ).
- */
 export function useCarsInfinite(
   filters: Omit<CarsQuery, "page" | "limit">,
   limit = "12"
@@ -37,7 +33,6 @@ export function useCarsInfinite(
 
   const targetCount = Number.parseInt(limit, 10) || 12;
 
-  // Авто-догрузка при активных фильтрах, пока карточек меньше limit
   useEffect(() => {
     if (!hasAnyFilter) return;
     if (cars.length >= targetCount) return;
