@@ -13,6 +13,7 @@ root.render(
   <TanStackProvider>
     <ToastProvider>
       <AppRouter />
+      <SpeedInsights />
     </ToastProvider>
   </TanStackProvider>
 );
