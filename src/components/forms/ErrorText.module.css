@@ -1,0 +1,5 @@
+.error {
+  color: var(--error, #e5484d);
+  font-size: var(--body2-fs);
+  line-height: var(--body2-lh);
+}

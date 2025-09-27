@@ -1,68 +1,55 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import toast from "react-hot-toast";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup"; // важно: 'yup', не 'Yup'
+import Button from "@components/ui/Button";
+import Input from "@components/ui/Input";
+import ErrorText from "@components/forms/ErrorText";
 import s from "./BookingForm.module.css";
 
+type Values = {
+  name: string;
+  email: string;
+  date: string;
+};
+
+const initialValues: Values = { name: "", email: "", date: "" };
+
 const Schema = Yup.object({
-  name: Yup.string().required("Required"),
-  email: Yup.string().email("Invalid email").required("Required"),
-  phone: Yup.string().required("Required"),
-  pickupDate: Yup.string().required("Required"),
+  name: Yup.string().trim().required("Name is required"),
+  email: Yup.string().email("Invalid email").required("E-mail is required"),
+  date: Yup.string().trim().required("Booking date is required"),
 });
 
-export default function BookingForm({ carId }: { carId: string }) {
+export default function BookingForm() {
+  const handleSubmit = (values: Values) => {
+    // TODO: заменить на реальный сабмит + нотификацию
+    console.log("booking submit", values);
+  };
+
   return (
-    <Formik
-      initialValues={{ name: "", email: "", phone: "", pickupDate: "" }}
+    <Formik<Values>
+      initialValues={initialValues}
       validationSchema={Schema}
-      onSubmit={async (values, { resetForm }) => {
-        // No real backend per PRD — simulate success
-        await new Promise((r) => setTimeout(r, 400));
-        toast.success("Booking request sent!");
-        resetForm();
-      }}
+      onSubmit={handleSubmit}
     >
-      <Form className={s.form} aria-labelledby="book-title">
+      <Form className={s.form} noValidate>
         <div className={s.row}>
-          <label className={s.label} htmlFor="name">
-            Name
-          </label>
-          <Field id="name" name="name" className={s.input} />
-          <ErrorMessage name="name" component="div" className={s.error} />
+          <Field as={Input} name="name" placeholder="Name*" />
+          <ErrorText name="name" />
         </div>
+
         <div className={s.row}>
-          <label className={s.label} htmlFor="email">
-            Email
-          </label>
-          <Field id="email" name="email" type="email" className={s.input} />
-          <ErrorMessage name="email" component="div" className={s.error} />
+          <Field as={Input} name="email" placeholder="Email*" type="email" />
+          <ErrorText name="email" />
         </div>
+
         <div className={s.row}>
-          <label className={s.label} htmlFor="phone">
-            Phone
-          </label>
-          <Field id="phone" name="phone" className={s.input} />
-          <ErrorMessage name="phone" component="div" className={s.error} />
+          <Field as={Input} name="date" placeholder="Date" type="date" />
+          <ErrorText name="date" />
         </div>
-        <div className={s.row}>
-          <label className={s.label} htmlFor="pickupDate">
-            Pickup date
-          </label>
-          <Field
-            id="pickupDate"
-            name="pickupDate"
-            type="date"
-            className={s.input}
-          />
-          <ErrorMessage name="pickupDate" component="div" className={s.error} />
-        </div>
-        <button
-          type="submit"
-          className={s.btn}
-          aria-label={`Book car ${carId}`}
-        >
+
+        <Button type="submit" fullWidth>
           Book now
-        </button>
+        </Button>
       </Form>
     </Formik>
   );

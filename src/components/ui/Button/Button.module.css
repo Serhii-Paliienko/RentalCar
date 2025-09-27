@@ -1,0 +1,45 @@
+/* src/components/ui/Button/Button.module.css */
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 44px;
+  padding: 0 24px;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: var(--button);
+  color: var(--white);
+
+  font-family: var(--font-family, Manrope), system-ui, -apple-system, Segoe UI,
+    Roboto, Arial;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1;
+
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.root:hover,
+.root:focus-visible {
+  background: var(--button-hover);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.secondary {
+  background: var(--badges); /* светло-серый из макета */
+  color: var(--main); /* тёмный текст */
+}
+
+.secondary:hover,
+.secondary:focus-visible {
+  filter: brightness(0.97);
+}

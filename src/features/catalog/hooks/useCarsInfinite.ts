@@ -1,171 +1,142 @@
+// src/features/catalog/hooks/useCarsInfinite.ts
 import { useEffect, useMemo } from "react";
 import {
   useInfiniteQuery,
   useQueryClient,
   type InfiniteData,
+  type UseInfiniteQueryResult,
 } from "@tanstack/react-query";
 import { getCars } from "@api/cars";
-import type { CarsQuery, Car, CarsResponse } from "@api/types";
+import type { CarsQuery, CarsResponseRaw, Car } from "@api/types";
 
-type Options = {
-  /** Сколько карточек считаем «страницей» в UI (по умолчанию "12") */
-  limit?: string;
-  /** Мгновенно показать placeholder из кэша, пока идёт сетевой запрос */
-  instantFromCache?: boolean;
-  /** Ограничение на объём placeholder-а из кэша (чтобы не раздувать память) */
-  placeholderCap?: number;
+type FiltersInput = Omit<CarsQuery, "limit" | "page">;
+
+type BaseRQ = UseInfiniteQueryResult<
+  InfiniteData<CarsResponseRaw, unknown>,
+  Error
+>;
+export type UseCarsInfiniteResult = BaseRQ & {
+  cars: Car[];
+  hasAnyFilter: boolean;
+  isEmptyAfterAllPages: boolean;
+  isUpdatingInBackground: boolean;
 };
 
-/** безопасный парс чисел из строк с любыми символами */
-function num(v?: string) {
-  const n = v ? Number.parseInt(v.replace(/[^\d]/g, ""), 10) : NaN;
-  return Number.isFinite(n) ? n : undefined;
-}
-
-/** локальная проверка соответствия фильтрам (та же логика, что и у бэка + строгая цена) */
-function matchesFilters(c: Car, f: Omit<CarsQuery, "page" | "limit">) {
-  if (f.brand && c.brand.trim() !== f.brand.trim()) return false;
-  const p = num(f.price);
-  if (p !== undefined && Number(c.rentalPrice) !== p) return false; // strict price
-  const min = num(f.minMileage);
-  const max = num(f.maxMileage);
-  if (min !== undefined && c.mileage < min) return false;
-  if (max !== undefined && c.mileage > max) return false;
-  return true;
-}
-
-/** собираем placeholder из уже закешированных страниц других запросов */
-function buildPlaceholderFromCache(
-  qc: ReturnType<typeof useQueryClient>,
-  filters: Omit<CarsQuery, "page" | "limit">,
-  limit: number,
-  cap: number
-): InfiniteData<CarsResponse> | undefined {
-  const all = qc.getQueriesData<InfiniteData<CarsResponse>>({
-    queryKey: ["cars"],
-    type: "active",
-  });
-  if (!all.length) return undefined;
-
-  const merged: Car[] = [];
+function flatCars(data: InfiniteData<CarsResponseRaw, unknown> | undefined) {
+  if (!data) return [] as Car[];
   const seen = new Set<string>();
-  for (const [, data] of all) {
-    if (!data) continue;
-    for (const page of data.pages) {
-      for (const car of page.cars) {
-        if (!seen.has(car.id)) {
-          seen.add(car.id);
-          merged.push(car);
-          if (merged.length >= cap) break;
-        }
+  const out: Car[] = [];
+  for (const page of data.pages) {
+    for (const car of page.cars) {
+      if (!seen.has(car.id)) {
+        seen.add(car.id);
+        out.push(car);
       }
-      if (merged.length >= cap) break;
     }
-    if (merged.length >= cap) break;
   }
-  if (!merged.length) return undefined;
-
-  const filtered = merged.filter((c) => matchesFilters(c, filters));
-  const page: CarsResponse = {
-    cars: filtered.slice(0, limit),
-    page: 1,
-    totalPages: 1,
-    totalCars: filtered.length,
-  };
-
-  return { pages: [page], pageParams: ["1"] };
+  return out;
 }
 
-/**
- * Бесконечная загрузка каталога:
- * - backend-пагинация и фильтры
- * - строгая цена дорезается в api.getCars
- * - optional: мгновенный placeholder из кэша + фоновой рефетч
- * - автодогрузка при активных фильтрах, чтобы добрать limit
- */
+function placeholderFromCache(
+  client: ReturnType<typeof useQueryClient>,
+  keyPrefix: readonly unknown[],
+  cap: number
+): InfiniteData<CarsResponseRaw, unknown> | undefined {
+  // Находим последнее совпадение по ключу ["cars", ...]
+  const entries = client
+    .getQueriesData<InfiniteData<CarsResponseRaw>>({
+      predicate: (q) =>
+        Array.isArray(q.queryKey) && q.queryKey[0] === keyPrefix[0],
+    })
+    .map(([, data]) => data)
+    .filter(Boolean) as InfiniteData<CarsResponseRaw, unknown>[];
+
+  if (!entries.length) return undefined;
+
+  // Берём последнюю (самую свежую) и обрезаем по cap
+  const last = entries[entries.length - 1];
+  const cars = flatCars(last).slice(0, cap);
+  const pageSize = Math.max(1, last.pages[0]?.cars?.length ?? 12);
+  const pages: CarsResponseRaw[] = [];
+  for (let i = 0; i < Math.ceil(cars.length / pageSize); i++) {
+    const slice = cars.slice(i * pageSize, (i + 1) * pageSize);
+    pages.push({
+      cars: slice,
+      page: i + 1,
+      totalPages: last.pages[last.pages.length - 1]?.totalPages ?? 1,
+      totalCars: last.pages[last.pages.length - 1]?.totalCars ?? slice.length,
+    });
+  }
+  return { pages, pageParams: pages.map((p) => p.page) };
+}
+
+/** Инфинит-кверя с серверной пагинацией и пост-строгой ценой */
 export function useCarsInfinite(
-  filters: Omit<CarsQuery, "page" | "limit">,
-  opts: Options = {}
-) {
-  const limitStr = opts.limit ?? "12";
-  const limit = Number.parseInt(limitStr, 10) || 12;
-  const instantFromCache = opts.instantFromCache ?? true;
-  const placeholderCap = opts.placeholderCap ?? 200;
-
-  const hasAnyFilter =
-    !!filters.brand?.trim() ||
-    !!filters.price?.trim() ||
-    !!filters.minMileage?.trim() ||
-    !!filters.maxMileage?.trim();
-
-  const qc = useQueryClient();
-
-  const query = useInfiniteQuery({
-    queryKey: ["cars", filters, limitStr],
-    queryFn: ({ pageParam = "1" }) =>
-      getCars({ ...filters, page: String(pageParam), limit: String(limit) }),
-    getNextPageParam: (last) =>
-      last.page < last.totalPages ? String(last.page + 1) : undefined,
-    initialPageParam: "1",
-
-    // хотим показать placeholder из кэша, НО всегда подтверждаем сетью при смене фильтров
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: 1,
-    staleTime: 60_000,
-    gcTime: 10 * 60_000,
-
-    placeholderData: instantFromCache
-      ? () => buildPlaceholderFromCache(qc, filters, limit, placeholderCap)
-      : undefined,
-  });
-
-  // Склейка страниц
-  const cars: Car[] = useMemo(
-    () => (query.data?.pages ?? []).flatMap((p) => p.cars),
-    [query.data]
+  filters: FiltersInput,
+  opts?: { limit?: string; instantFromCache?: boolean; placeholderCap?: number }
+): UseCarsInfiniteResult {
+  const limit = opts?.limit ?? "12";
+  const effFilters: FiltersInput = {
+    brand: filters.brand || "",
+    rentalPrice: filters.rentalPrice || "",
+    minMileage: filters.minMileage || "",
+    maxMileage: filters.maxMileage || "",
+  };
+  const hasAnyFilter = !!(
+    effFilters.brand ||
+    effFilters.rentalPrice ||
+    effFilters.minMileage ||
+    effFilters.maxMileage
   );
 
-  // Автодогрузка при активных фильтрах, чтобы заполнить «страницу»
-  useEffect(() => {
-    if (!hasAnyFilter) return;
-    if (cars.length >= limit) return;
-    if (!query.hasNextPage) return;
-    if (query.isFetchingNextPage || query.isLoading || query.isRefetching)
-      return;
+  const client = useQueryClient();
 
-    query.fetchNextPage();
+  const queryKey = ["cars", effFilters, limit] as const;
+
+  const q = useInfiniteQuery({
+    queryKey,
+    initialPageParam: 1,
+    queryFn: async ({ pageParam }) => {
+      const page = String(pageParam ?? 1);
+      return getCars({ ...effFilters, limit, page });
+    },
+    getNextPageParam: (last) => {
+      return last.page < last.totalPages ? last.page + 1 : undefined;
+    },
+    placeholderData: opts?.instantFromCache
+      ? () =>
+          placeholderFromCache(client, queryKey, opts?.placeholderCap ?? 200)
+      : undefined,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const cars = useMemo(() => flatCars(q.data), [q.data]);
+
+  // Догружаем страницы при активных фильтрах, пока не набрали limit или не кончились страницы
+  useEffect(() => {
+    const pageSize = Number(limit) || 12;
+    if (!hasAnyFilter) return;
+    if (q.isFetching || q.isFetchingNextPage) return;
+    if (!q.hasNextPage) return;
+    if (cars.length >= pageSize) return;
+    q.fetchNextPage();
   }, [
     hasAnyFilter,
+    q.isFetching,
+    q.isFetchingNextPage,
+    q.hasNextPage,
     cars.length,
     limit,
-    query.hasNextPage,
-    query.isFetchingNextPage,
-    query.isLoading,
-    query.isRefetching,
-    query.fetchNextPage,
   ]);
 
-  const isEmptyAfterAllPages =
-    !!query.data &&
-    (query.data.pages?.length ?? 0) > 0 &&
-    cars.length === 0 &&
-    !query.hasNextPage &&
-    !query.isFetchingNextPage;
+  const isEmptyAfterAllPages = q.status === "success" && cars.length === 0;
+  const isUpdatingInBackground = q.isFetching && !q.isLoading;
 
-  const isUpdatingInBackground = query.isRefetching || query.isFetchingNextPage;
-
-  return {
+  return Object.assign(q, {
     cars,
     hasAnyFilter,
     isEmptyAfterAllPages,
     isUpdatingInBackground,
-    fetchNextPage: query.fetchNextPage,
-    hasNextPage: query.hasNextPage,
-    isLoading: query.isLoading,
-    isFetchingNextPage: query.isFetchingNextPage,
-    isRefetching: query.isRefetching,
-    error: query.error,
-  };
+  });
 }

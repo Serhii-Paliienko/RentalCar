@@ -1,11 +1,8 @@
-import { ReactNode } from "react";
-import { Toaster } from "react-hot-toast";
+import type { ReactNode } from "react";
 
-export function ToastProvider({ children }: { children: ReactNode }) {
-  return (
-    <>
-      {children}
-      <Toaster position="top-right" />
-    </>
-  );
+type Props = { children: ReactNode };
+
+/** Тонкая обёртка под тосты (именованный экспорт) */
+export function ToastProvider({ children }: Props) {
+  return <>{children}</>;
 }

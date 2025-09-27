@@ -1,27 +1,63 @@
 :root {
-  /* colors */
-  --clr-bg: #ffffff;
-  --clr-text: #0b0b0b;
-  --clr-muted: #6c757d;
-  --clr-primary: #0d6efd;
-  --clr-border: #e5e7eb;
+  /* Colors */
+  --main: #101828;
+  --gray: #8e929a;
+  --gray-light: #dadde1;
+  --badges: #f2f4f7;
+  --inputs: #f7f7f7;
+  --white: #ffffff;
+  --button: #3470ff;
+  --button-hover: #0b44cd;
+  --error: #e5484d;
 
-  /* spacing */
-  --sp-1: 4px;
-  --sp-2: 8px;
-  --sp-3: 12px;
-  --sp-4: 16px;
-  --sp-6: 24px;
-  --sp-8: 32px;
+  /* Typography — семейство */
+  --font-family: "Manrope", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+    "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    sans-serif;
 
-  /* radii */
+  /* Детализированные токены */
+  --h1-fs: 60px;
+  --h1-lh: 72px;
+  --h1-fw: 700;
+  --h2-fs: 24px;
+  --h2-lh: 32px;
+  --h2-fw: 600;
+  --h3-fs: 20px;
+  --h3-lh: 24px;
+  --h3-fw: 600;
+  --body-fs: 16px;
+  --body-lh: 20px;
+  --body-fw: 500;
+  --body2-fs: 12px;
+  --body2-lh: 16px;
+  --body2-fw: 400;
+  --btn-fs: 16px;
+  --btn-lh: 20px;
+  --btn-fw: 600;
+
+  /* Сокращённые шорткаты для удобства (легально использовать в CSS: font: var(--h1)) */
+  --h1: 700 60px/72px var(--font-family);
+  --h2: 600 24px/32px var(--font-family);
+  --h3: 600 20px/24px var(--font-family);
+  --body: 500 16px/20px var(--font-family);
+  --body2: 400 12px/16px var(--font-family);
+  --btn: 600 16px/20px var(--font-family);
+
+  /* Layout */
+  --container-w: 1440px; /* прежний токен */
+  --container-max: var(--container-w); /* алиас — чтобы оба варианта работали */
+  --container-x: 120px;
+  --header-h: 68px;
+
+  --btn-h: 44px;
+  --btn-radius: 19px;
   --radius: 12px;
+  --card-gap: 20px;
+  --section-y: 80px;
 
-  /* typography */
-  --fs-xs: 12px;
-  --fs-sm: 14px;
-  --fs-md: 16px;
-  --fs-lg: 20px;
-  --fs-xl: 24px;
-  --fs-2xl: 32px;
+  /* Effects */
+  --focus-ring: 0 0 0 3px rgba(52, 112, 255, 0.35);
+
+  /* Hero */
+  --hero-img: url("/images/hero/hero-1440.jpg"); /* дефолтный фон, если используешь через CSS */
 }

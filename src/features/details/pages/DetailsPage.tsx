@@ -1,68 +1,71 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getCarById } from "@api/cars";
-import { formatMileage, formatPriceUsd } from "@utils/format";
-import Specs from "../components/Specs/Specs";
-import BookingForm from "../components/BookingForm/BookingForm";
-import Loader from "@components/Loader/Loader";
+import BookingForm from "@features/details/components/BookingForm/BookingForm";
 import s from "./DetailsPage.module.css";
 
-export default function DetailsPage() {
-  const { id } = useParams<{ id: string }>();
-  const { data: car, status } = useQuery({
+type Props = { carId?: string };
+
+export default function DetailsPage({ carId }: Props) {
+  const params = useParams();
+  const id = carId ?? params.id;
+
+  if (!id) {
+    return (
+      <main className="container">
+        <p>Car id is missing</p>
+      </main>
+    );
+  }
+
+  const {
+    data: car,
+    status,
+    error,
+  } = useQuery({
     queryKey: ["car", id],
-    queryFn: () => getCarById(id!),
+    queryFn: () => getCarById(id),
     enabled: !!id,
-    staleTime: 300_000,
+    staleTime: 60_000,
+    gcTime: 600_000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: 1,
   });
 
   if (status === "pending") {
     return (
-      <main className={s.wrap}>
-        <Loader label="Loading car…" />
+      <main className="container">
+        <p>Loading…</p>
       </main>
     );
   }
 
-  if (status === "error") {
+  if (status === "error" || !car) {
     return (
-      <main className={s.wrap}>
-        <p role="alert">Failed to load the car. Please try again.</p>
+      <main className="container">
+        <p role="alert">Failed to load car. {(error as Error)?.message}</p>
       </main>
     );
   }
-
-  if (!car) return null;
 
   return (
-    <main className={s.wrap}>
-      <header className={s.header}>
-        <h1 className={s.title}>
-          {car.brand} {car.model}
-        </h1>
-        <div className={s.meta}>
-          {car.year} • {car.type} • {formatMileage(car.mileage)} •{" "}
-          {formatPriceUsd(car.rentalPrice)}/day
-        </div>
-      </header>
-
-      <section className={s.content}>
-        <div>
+    <main className="container">
+      <div className={s.grid}>
+        <div className={s.left}>
           <img
+            className={s.img}
             src={car.img}
             alt={`${car.brand} ${car.model}`}
-            className={s.img}
+            loading="eager"
           />
-          <h2>Specifications</h2>
-          <Specs car={car} />
-          <h2>Description</h2>
-          <p>{car.description}</p>
+          {/* спеки/описание */}
         </div>
-        <aside>
-          <h2 id="book-title">Rental</h2>
-          <BookingForm carId={car.id} />
-        </aside>
-      </section>
+        <div className={s.right}>
+          <BookingForm />
+        </div>
+      </div>
     </main>
   );
 }

@@ -1,0 +1,23 @@
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--radius-pill);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--gray-light);
+  background: var(--white);
+  cursor: pointer;
+}
+.dot:hover {
+  border-color: var(--button-hover);
+}
+
+.active {
+  background: var(--button);
+  border-color: var(--button);
+}

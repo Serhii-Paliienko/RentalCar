@@ -1,22 +1,22 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactNode, useState } from "react";
+import type { ReactNode } from "react";
 
-export function TanStackProvider({ children }: { children: ReactNode }) {
-  const [client] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 60_000,
-            gcTime: 10 * 60_000,
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-            refetchOnMount: false,
-            retry: 1,
-          },
-        },
-      })
-  );
+const client = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      gcTime: 600_000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      retry: 1,
+    },
+  },
+});
 
+type Props = { children: ReactNode };
+
+/** React Query provider (именованный экспорт) */
+export function TanStackProvider({ children }: Props) {
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }

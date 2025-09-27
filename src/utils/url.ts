@@ -1,58 +1,48 @@
 import type { CatalogFilters } from "@api/types";
+import { normalizeIntString, normalizeRange } from "@utils/number";
 
-function clean(v: unknown): string {
-  if (v == null) return "";
-  return String(v).trim();
+// только rentalPrice (никакого "price")
+export function parseCatalogFilters(search: string): CatalogFilters {
+  const q = new URLSearchParams(search.startsWith("?") ? search : `?${search}`);
+
+  const brand = q.get("brand") || "";
+  const rentalPrice = q.get("rentalPrice") || "";
+  const minMileageRaw = q.get("minMileage") || "";
+  const maxMileageRaw = q.get("maxMileage") || "";
+
+  const { min, max } = normalizeRange(minMileageRaw, maxMileageRaw);
+
+  const filters: CatalogFilters = {
+    ...(brand ? { brand } : {}),
+    ...(rentalPrice ? { rentalPrice: normalizeIntString(rentalPrice) } : {}),
+    ...(min ? { minMileage: normalizeIntString(min) } : {}),
+    ...(max ? { maxMileage: normalizeIntString(max) } : {}),
+  };
+
+  return filters;
 }
 
-function digits(v: unknown): string | undefined {
-  if (v == null) return undefined;
-  const cleaned = String(v).replace(/[^\d]/g, "").trim();
-  return cleaned ? cleaned : undefined;
-}
+export type ReadFilters = ReturnType<typeof parseCatalogFilters>;
+export const readFilters = parseCatalogFilters;
 
-type FiltersShape = Required<
-  Pick<CatalogFilters, "brand" | "price" | "minMileage" | "maxMileage">
->;
-
-export function readFilters(search: string): FiltersShape {
-  const sp = new URLSearchParams(search || "");
-
-  const brand = clean(sp.get("brand"));
-  const price = digits(sp.get("price")) ?? "";
-
-  let min = digits(sp.get("minMileage"));
-  let max = digits(sp.get("maxMileage"));
-
-  if (min && max && Number(min) > Number(max)) {
-    [min, max] = [max, min];
-  }
-
+export function readCatalogSettings(search: string): {
+  instantFromCache: boolean;
+  placeholderCap: number;
+} {
+  const q = new URLSearchParams(search.startsWith("?") ? search : `?${search}`);
+  const instantFromCache = q.get("instant") !== "false";
+  const cap = Number(q.get("cap") || "200");
   return {
-    brand,
-    price,
-    minMileage: min ?? "",
-    maxMileage: max ?? "",
+    instantFromCache,
+    placeholderCap: Number.isFinite(cap) && cap > 0 ? cap : 200,
   };
 }
 
-export function buildSearch(values: Partial<FiltersShape>): string {
-  const sp = new URLSearchParams();
-
-  const brand = clean(values.brand);
-  const price = digits(values.price);
-  let min = digits(values.minMileage);
-  let max = digits(values.maxMileage);
-
-  if (min && max && Number(min) > Number(max)) {
-    [min, max] = [max, min];
-  }
-
-  if (brand) sp.set("brand", brand);
-  if (price) sp.set("price", price);
-  if (min) sp.set("minMileage", min);
-  if (max) sp.set("maxMileage", max);
-
-  const q = sp.toString();
-  return q ? `?${q}` : "";
+export function stringifyCatalogFilters(f: CatalogFilters): string {
+  const p = new URLSearchParams();
+  if (f.brand) p.set("brand", f.brand);
+  if (f.rentalPrice) p.set("rentalPrice", normalizeIntString(f.rentalPrice));
+  if (f.minMileage) p.set("minMileage", normalizeIntString(f.minMileage));
+  if (f.maxMileage) p.set("maxMileage", normalizeIntString(f.maxMileage));
+  return p.toString();
 }

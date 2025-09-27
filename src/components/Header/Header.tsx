@@ -1,39 +1,39 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link, type NavLinkRenderProps } from "react-router-dom";
+import StyleSwitcher from "@components/StyleSwitcher/StyleSwitcher";
 import s from "./Header.module.css";
 
 export default function Header() {
   return (
-    <header className={s.header} role="banner" aria-label="Site header">
-      <div className={s.inner}>
-        <NavLink to="/" className={s.logo} aria-label="RentalCar home">
-          RentalCar
-        </NavLink>
+    <header className={s.header} role="banner">
+      <div className="container">
+        <div className={s.inner}>
+          <Link to="/" aria-label="RentalCar — Home">
+            <svg className={s.logo} aria-hidden="true" focusable="false">
+              <use href="/sprite.svg#Logo" />
+            </svg>
+          </Link>
 
-        <nav className={s.nav} aria-label="Main navigation">
-          <ul className={s.list}>
-            <li>
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  [s.link, isActive ? s.active : ""].join(" ")
-                }
-                end
-              >
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/catalog"
-                className={({ isActive }) =>
-                  [s.link, isActive ? s.active : ""].join(" ")
-                }
-              >
-                Catalog
-              </NavLink>
-            </li>
-          </ul>
-        </nav>
+          <StyleSwitcher />
+
+          <nav className={s.nav} aria-label="Main">
+            <NavLink
+              to="/"
+              className={({ isActive }: NavLinkRenderProps) =>
+                isActive ? `${s.link} ${s.active}` : s.link
+              }
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/catalog"
+              className={({ isActive }: NavLinkRenderProps) =>
+                isActive ? `${s.link} ${s.active}` : s.link
+              }
+            >
+              Catalog
+            </NavLink>
+          </nav>
+        </div>
       </div>
     </header>
   );

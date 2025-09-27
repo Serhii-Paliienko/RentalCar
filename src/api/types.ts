@@ -1,7 +1,10 @@
-export type Brand = string;
-export type BrandsResponse = Brand[];
+export type NormalizedError = {
+  message: string;
+  status?: number;
+  code?: string;
+};
 
-export interface Car {
+export type Car = {
   id: string;
   year: number;
   brand: string;
@@ -13,47 +16,32 @@ export interface Car {
   engineSize: string;
   accessories: string[];
   functionalities: string[];
-  rentalPrice: string;
+  rentalPrice: string; // "40"
   rentalCompany: string;
   address: string;
   rentalConditions: string[];
   mileage: number;
-}
+};
 
-export type NumericLike = number | string;
-
-export interface CarsResponseRaw {
-  cars: Car[];
-  totalCars: NumericLike;
-  page: NumericLike;
-  totalPages: NumericLike;
-}
-
-export interface CarsResponse {
+export type CarsResponseRaw = {
   cars: Car[];
   totalCars: number;
   page: number;
   totalPages: number;
-}
+};
 
-export interface CarsQuery {
+export type CarsQuery = {
   brand?: string;
-  price?: string;
+  rentalPrice?: string;
   minMileage?: string;
   maxMileage?: string;
-  page: string;
-  limit: string;
-}
+  limit?: string;
+  page?: string;
+};
 
-export interface CatalogFilters {
-  brand: string;
-  price: string;
-  minMileage: string;
-  maxMileage: string;
-}
-
-export interface NormalizedError {
-  code: string;
-  message: string;
-  details?: unknown;
-}
+export type CatalogFilters = {
+  brand?: string;
+  rentalPrice?: string;
+  minMileage?: string;
+  maxMileage?: string;
+};

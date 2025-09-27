@@ -1,0 +1,80 @@
+.hero {
+  position: relative;
+  isolation: isolate; /* собственный стек */
+  min-height: var(--hero-h, 700px);
+  color: var(--white);
+}
+
+/* затемнение над фото по всей высоте секции */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(16, 24, 40, 0.1) 0%,
+    rgba(16, 24, 40, 0.3) 35%,
+    rgba(16, 24, 40, 0.55) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* фон-картинка */
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: -1; /* ниже оверлея */
+}
+.media > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* контейнер и выравнивание контента */
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-max, 1440px);
+  margin-inline: auto;
+  padding: 80px var(--container-x, 32px);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 16px;
+  min-height: inherit; /* тянем высоту секции */
+}
+
+.title {
+  font: var(--h1);
+  text-align: center;
+  color: var(--white);
+}
+.subtitle {
+  font: var(--body);
+  text-align: center;
+  color: var(--white);
+  opacity: 0.9;
+}
+
+/* точки-переключатели (декор) */
+.dots {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--badges);
+}
+.dotActive {
+  background: var(--button);
+}
+
+.actions {
+  margin-top: 8px;
+}

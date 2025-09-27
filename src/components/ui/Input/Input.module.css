@@ -1,0 +1,27 @@
+/* src/components/ui/Input/Input.module.css */
+.input {
+  display: inline-flex;
+  align-items: center;
+
+  height: 48px;
+  padding: 0 16px;
+
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--gray-light);
+  background: var(--inputs);
+
+  color: var(--main);
+  font-family: var(--font-family, Manrope), system-ui;
+  font-size: 16px;
+  line-height: 20px;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--gray);
+}
+
+.input:focus-visible {
+  border-color: var(--button);
+}

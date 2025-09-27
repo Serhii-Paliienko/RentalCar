@@ -1,0 +1,15 @@
+.wrap {
+  text-align: center;
+  padding: var(--sp-8) 0;
+  color: var(--clr-muted);
+}
+.title {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  color: var(--clr-text);
+  margin-bottom: var(--sp-3);
+}
+.desc {
+  margin: 0 auto var(--sp-6);
+  max-width: 520px;
+}

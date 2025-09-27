@@ -1,4 +1,5 @@
-/* Global styles. Imported in main.tsx after modern-normalize and tokens.css */
+@import "modern-normalize/modern-normalize.css";
+@import "./tokens.css";
 
 html,
 body,
@@ -6,31 +7,35 @@ body,
   height: 100%;
 }
 
+main {
+  flex-grow: 1;
+}
+
 body {
-  margin: 0;
-  background: var(--clr-bg);
-  color: var(--clr-text);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
-    Noto Sans, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Apple Color Emoji",
-    "Segoe UI Emoji";
-  font-size: var(--fs-md);
-  line-height: 1.5;
+  font-family: var(--font-family);
+  color: var(--main);
+  background: var(--white);
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* единый контейнер */
+.container {
+  max-width: var(--container-max);
+  padding-inline: var(--container-x);
+  margin-inline: auto;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
-button {
-  font: inherit;
-  cursor: pointer;
+/* утилита для фонового hero, если нужен CSS background */
+.hero-bg {
+  background-image: var(--hero-img);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

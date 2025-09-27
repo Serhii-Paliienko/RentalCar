@@ -1,37 +1,24 @@
-import axios, { AxiosError } from "axios";
-import type { NormalizedError } from "@api/types";
+// src/api/axios.ts
+import axios from "axios";
+import type { NormalizedError } from "./types";
 
 export const api = axios.create({
   baseURL: "https://car-rental-api.goit.global",
-  timeout: 15_000,
+  headers: { "Content-Type": "application/json" },
+  timeout: 15000,
 });
 
 api.interceptors.response.use(
-  (r) => r,
-  (e: AxiosError) => Promise.reject(e)
-);
-
-export function toNormalizedError(e: unknown): NormalizedError {
-  if (axios.isAxiosError(e)) {
-    const status = e.response?.status ?? 0;
-
-    let message = e.message || "Unexpected error";
-    const data: unknown = e.response?.data;
-    if (typeof data === "string") {
-      message = data;
-    } else if (data && typeof (data as any).message === "string") {
-      message = (data as any).message as string;
-    }
-
-    return {
-      code: String(status || "AXIOS_ERROR"),
-      message,
-      details: {
-        url: e.config?.url,
-        method: e.config?.method,
-        data: e.response?.data,
-      },
+  (res) => res,
+  (err) => {
+    const ne: NormalizedError = {
+      message:
+        err?.response?.data?.message ||
+        err?.message ||
+        "Network error. Please try again.",
+      status: err?.response?.status,
+      code: err?.code,
     };
+    return Promise.reject(ne);
   }
-  return { code: "UNKNOWN", message: "Unexpected error", details: e };
-}
+);

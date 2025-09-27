@@ -1,56 +1,35 @@
+/* src/components/Header/Header.module.css */
 .header {
-  background: #fff;
-  border-bottom: 1px solid var(--clr-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--badges);
+  border-bottom: 1px solid var(--badges);
+  margin-bottom: 4px;
+  height: 68px;
+  padding-top: 26px;
 }
 
 .inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--sp-4);
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: var(--sp-4);
 }
 
 .logo {
-  font-size: var(--fs-lg);
-  font-weight: 600;
-  color: var(--clr-text);
+  width: 104px;
+  height: 16px;
 }
 
 .nav {
-}
-
-.list {
   display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  gap: 32px;
 }
 
 .link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-2) var(--sp-3);
-  border: 1px solid var(--clr-border);
-  border-radius: var(--radius);
-  background: #fff;
-  color: var(--clr-text);
+  color: var(--main);
   text-decoration: none;
-  cursor: pointer;
-  font-size: var(--fs-md);
-}
-
-.link:hover {
-  border-color: var(--clr-primary);
 }
 
 .active {
-  background: var(--clr-primary);
-  border-color: var(--clr-primary);
-  color: #fff;
+  color: var(--button);
 }

@@ -1,23 +1,14 @@
 import s from "./Loader.module.css";
 
-type LoaderProps = {
+type Props = {
   label?: string;
-  ariaLabel?: string;
 };
 
-export default function Loader({ label = "Loading…", ariaLabel }: LoaderProps) {
+export default function Loader({ label = "Loading…" }: Props) {
   return (
-    <section
-      className={s.wrap}
-      role="status"
-      aria-live="polite"
-      aria-label={ariaLabel}
-    >
-      <div className={s.scene} aria-hidden="true">
-        <div className={s.car} />
-        <div className={s.road} />
-      </div>
-      <p className={s.text}>{label}</p>
-    </section>
+    <div className={s.wrap} role="status" aria-live="polite" aria-busy="true">
+      <div className={s.spinner} aria-hidden />
+      <span className={s.text}>{label}</span>
+    </div>
   );
 }

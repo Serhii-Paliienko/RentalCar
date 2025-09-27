@@ -1,42 +1,43 @@
 import { lazy, Suspense } from "react";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet } from "react-router-dom";
 import Header from "@components/Header/Header";
-import Loader from "@components/Loader/Loader";
 
+// ленивые страницы
 const HomePage = lazy(() => import("@pages/HomePage/HomePage"));
 const CatalogPage = lazy(() => import("@features/catalog/pages/CatalogPage"));
 const DetailsPage = lazy(() => import("@features/details/pages/DetailsPage"));
 const NotFound = lazy(() => import("@pages/NotFound/NotFound"));
 
-function Root() {
+function RootLayout() {
   return (
-    <>
+    <div id="app-root">
       <Header />
-      <Suspense fallback={<Loader />}>
+      <Suspense fallback={<div className="container">Loading…</div>}>
         <Outlet />
       </Suspense>
-    </>
+    </div>
   );
 }
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <RootLayout />,
     errorElement: (
-      <Suspense fallback={<Loader />}>
-        <NotFound />
-      </Suspense>
+      <div className="container">Something went wrong. Try reload.</div>
     ),
     children: [
+      // ✅ Домашняя как индекс-роут (без редиректа на каталог)
       { index: true, element: <HomePage /> },
+
+      // Каталог и детали
       { path: "catalog", element: <CatalogPage /> },
       { path: "catalog/:id", element: <DetailsPage /> },
+
+      // 404
       { path: "*", element: <NotFound /> },
     ],
   },
 ]);
 
-export default function AppRouter() {
-  return <RouterProvider router={router} />;
-}
+export default router;

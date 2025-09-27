@@ -3,59 +3,115 @@
   border-radius: var(--radius);
   overflow: hidden;
   display: grid;
-  background: #fff;
+  background: var(--white);
 }
 
 .img {
   width: 100%;
   height: 180px;
   object-fit: cover;
-  display: block;
 }
 
 .body {
-  padding: var(--sp-4);
   display: grid;
-  gap: var(--sp-3);
-  color: var(--clr-text);
+  gap: var(--sp-4);
+  padding: var(--sp-4);
 }
 
-.head {
-  display: flex;
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  gap: var(--sp-2);
-  justify-content: space-between;
+  gap: var(--sp-3);
 }
 
 .title {
-  font-size: var(--fs-lg);
   margin: 0;
+  font-size: var(--h3-fs);
+  line-height: var(--h3-lh);
+  font-weight: var(--h3-fw);
+}
+
+.price {
+  font-size: var(--h3-fs);
+  line-height: var(--h3-lh);
+  font-weight: 700;
 }
 
 .meta {
+  display: inline-flex;
+  gap: 12px;
   color: var(--clr-muted);
-  font-size: var(--fs-sm);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--body2-fs);
+  line-height: var(--body2-lh);
+  font-weight: var(--body2-fw);
 }
 
 .actions {
   display: flex;
-  gap: var(--sp-2);
+  gap: var(--sp-3);
+  align-items: center;
 }
 
 .btn {
-  border: 1px solid var(--clr-border);
-  background: #fff;
-  padding: var(--sp-2) var(--sp-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--sp-2) var(--sp-4);
   border-radius: var(--radius);
+  border: 1px solid var(--clr-border);
+  background: var(--white);
   cursor: pointer;
+  font-size: var(--btn-fs);
+  line-height: var(--btn-lh);
+  font-weight: var(--btn-fw);
 }
-
-.primary {
-  background: var(--clr-primary);
-  color: #fff;
-  border-color: var(--clr-primary);
+.btn:hover {
+  border-color: var(--button);
 }
 
 .fav {
   margin-left: auto;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* активный избранный — красим SVG через CSS-переменную из спрайта */
+.favActive .icon {
+  --color1: var(--button);
+}
+
+/* Card.module.css (пример) */
+.favBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--badges);
+  border: 1px solid var(--gray-light);
+  color: var(--gray); /* НЕ сам fill, а цвет текста — будет прокинут в svg */
+  cursor: pointer;
+}
+
+.favBtnActive {
+  color: #e02424;
+}
+
+.favIcon {
+  width: 20px;
+  height: 20px;
+  /* ключевое: задаём переменную, которую читает символ внутри спрайта */
+  --color1: currentColor;
 }

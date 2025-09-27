@@ -1,59 +1,12 @@
+.wrap {
+  padding-block: 24px;
+}
 .form {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--sp-4);
 }
-
-.control {
+.row {
   display: grid;
-  gap: var(--sp-2);
+  grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  gap: 20px;
 }
-
-.label {
-  font-size: var(--fs-sm);
-  color: var(--clr-muted);
-}
-
-.muted {
-  font-size: var(--fs-xs);
-  color: var(--clr-muted);
-  margin-left: 6px;
-}
-
-.input,
-.select {
-  border: 1px solid var(--clr-border);
-  padding: var(--sp-2) var(--sp-3);
-  border-radius: var(--radius);
-  background: #fff;
-}
-
-.actions {
-  display: flex;
-  align-items: end;
-  gap: var(--sp-2);
-}
-
-.button {
-  background: var(--clr-primary);
-  color: #fff;
-  border: 1px solid var(--clr-primary);
-  padding: var(--sp-2) var(--sp-4);
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-
-.reset {
-  border: 1px solid var(--clr-border);
-  background: white;
-  color: inherit;
-  padding: var(--sp-2) var(--sp-4);
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-
-@media (max-width: 900px) {
-  .form {
-    grid-template-columns: 1fr 1fr;
-  }
-}
+/* никаких .button/.input здесь больше нет */

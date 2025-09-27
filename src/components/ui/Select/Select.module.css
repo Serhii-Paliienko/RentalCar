@@ -1,0 +1,31 @@
+.select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 var(--sp-6) 0 var(--sp-4);
+  gap: var(--sp-3);
+  border-radius: var(--radius);
+  background: var(--inputs);
+  border: 1px solid var(--clr-border);
+}
+.select:focus-within {
+  box-shadow: var(--focus-ring);
+  border-color: var(--button-hover);
+}
+
+.control {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  height: 100%;
+  font-size: var(--fs-md);
+  color: var(--clr-text);
+  padding-right: 24px;
+}
+
+.chevron {
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
+}
