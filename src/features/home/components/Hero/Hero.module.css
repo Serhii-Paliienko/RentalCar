@@ -7,8 +7,6 @@
   );
   color: var(--white);
   overflow: hidden;
-
-  /* локальные переменные под макет */
   --hero-block-max: 783px;
   --hero-pad-top: 80px;
   --hero-pad-bottom: 60px;
@@ -25,7 +23,6 @@
   pointer-events: none;
 }
 
-/* slides */
 .slides {
   position: absolute;
   inset: 0;
@@ -48,7 +45,6 @@
   opacity: 1;
 }
 
-/* content */
 .inner {
   display: flex;
   position: relative;
@@ -79,14 +75,12 @@
   margin-top: var(--hero-gap-subtitle-cta);
 }
 
-/* CTA под макет: min-width 276px; высота/радиус совпадают с UI Button */
 .actions [data-cta="hero"] {
   min-width: 276px;
   height: 44px;
-  border-radius: 12px; /* дублируем на случай, если у Button переопределят токен */
+  border-radius: 12px;
 }
 
-/* dots feature — 20px от верхнего края hero */
 .dots {
   position: absolute;
   top: 20px;

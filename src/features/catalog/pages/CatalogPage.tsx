@@ -8,6 +8,7 @@ import { useCarsInfinite } from "@features/catalog/hooks/useCarsInfinite";
 import CarCard from "@features/catalog/components/CarCard/CarCard";
 import Filters from "@features/catalog/components/Filters/Filters";
 import s from "./CatalogPage.module.css";
+import Button from "@components/ui/Button";
 
 export default function CatalogPage() {
   const loc = useLocation();
@@ -84,15 +85,14 @@ export default function CatalogPage() {
 
       {hasNextPage && (
         <div className={s.more}>
-          <button
-            type="button"
+          <Button
             className={s.moreBtn}
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
             aria-label="Load more cars"
           >
             {isFetchingNextPage ? "Loading…" : "Load more"}
-          </button>
+          </Button>
         </div>
       )}
     </main>
