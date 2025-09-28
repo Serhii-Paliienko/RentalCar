@@ -1,4 +1,3 @@
-
 .card {
   display: grid;
   border-radius: 14px;
@@ -53,7 +52,7 @@
   gap: 12px;
 }
 .title {
-  font: var(--h3);
+  font: var(--body);
   color: var(--main);
   margin: 0;
 }
@@ -62,7 +61,7 @@
   font-weight: 600;
 }
 .price {
-  font: var(--h3);
+  font: var(--body);
 }
 
 .meta {
