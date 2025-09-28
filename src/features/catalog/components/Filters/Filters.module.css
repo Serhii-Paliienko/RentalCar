@@ -1,14 +1,10 @@
 /* src/features/catalog/components/Filters/Filters.module.css */
 
-/* ВЕРТИКАЛЬ:
-   — отступ сверху как в Figma, но минус нижний геп хедера.
-   В хедере уже есть CSS-переменная --header-gap: 4px (см. devtools).
-*/
+/* ВЕРХ/НИЗ: учитываем mb у Header (4px) и держим блок по центру */
 .wrap {
   width: 100%;
-  margin-top: calc(
-    64px - var(--header-gap, 4px)
-  ); /* вернуть margin-top и учесть mb header */
+  /* по макету ~64px от шапки, вычитаем хедерный gap */
+  margin-top: calc(var(--filters-top, 64px) - var(--header-gap, 4px));
   margin-bottom: 32px; /* до карточек */
 }
 
@@ -16,10 +12,8 @@
   width: 100%;
 }
 
-/* Сетка по Figma:
-   196 | 196 | 320 | 156, gap 16
-   Контентная ширина = 916px. Центрируем .row.
-*/
+/* Сетка Figma:
+   196 | 196 | 320 | 156; gap 16; контентная ширина 916px — центрирование */
 .row {
   display: grid;
   grid-template-columns: 196px 196px 320px 156px;
@@ -29,7 +23,7 @@
   margin-inline: auto;
 }
 
-/* подпись + контрол снизу */
+/* подпись + контрол */
 .group {
   display: grid;
   gap: 8px;
@@ -42,15 +36,13 @@
 }
 
 /* =========================
-   SELECT (кастомный)
-   Стилизуем внутренний label.root и меню.
-   Высота — ровно 44px по макету.
+   SELECT (триггер = label.root)
    ========================= */
 .selectBox {
   position: relative;
 }
 
-/* сам кликабельный элемент Select — внутри рендерится как <label class="root..."> */
+/* Кликабельный элемент селекта */
 .selectBox :global(label[class*="root"]) {
   display: flex;
   align-items: center;
@@ -58,7 +50,7 @@
 
   box-sizing: border-box;
   width: 100%;
-  height: 44px;
+  height: 44px; /* фикс как в макете */
 
   background: var(--inputs, #f5f6fb);
   border: 1px solid var(--gray-200, #e6e8ef);
@@ -67,40 +59,53 @@
   padding-inline: 14px;
   cursor: pointer;
   user-select: none;
+
+  /* убираем синее выделение/аутлайн */
+  outline: none;
+  box-shadow: none;
 }
 
-/* состояние открытия/фокуса — лёгкий обвод */
-.selectBox :global(label[class*="root"][data-open="true"]),
-.selectBox :global(label[class*="root"]:focus-visible) {
-  outline: 2px solid rgba(58, 106, 255, 0.25);
-  outline-offset: 0;
+/* также гасим аутлайн в состояниях фокуса/клика/открытия */
+.selectBox :global(label[class*="root"]:focus),
+.selectBox :global(label[class*="root"]:focus-visible),
+.selectBox :global(label[class*="root"][data-open="true"]) {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: var(--gray-200, #e6e8ef);
 }
 
-/* текст и иконка внутри label.root */
+/* текст и иконка внутри */
 .selectBox :global(label[class*="root"] > span) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* chevron: видимый, вращается при открытии */
 .selectBox :global(label[class*="root"] svg) {
   width: 16px;
   height: 16px;
-  color: var(--main, #121417); /* чтоб chevron был виден */
+  color: var(--main, #121417);
   stroke: currentColor;
+  fill: currentColor;
+  transition: transform 0.2s ease;
   flex: 0 0 auto;
 }
+.selectBox :global(label[class*="root"][data-open="true"] svg) {
+  transform: rotate(180deg);
+}
 
-/* выпадающее меню (listbox) */
+/* =========================
+   DROPDOWN
+   ========================= */
 .selectBox :global([role="listbox"]) {
   position: absolute;
   z-index: 30;
   left: 0;
-  right: auto;
   top: calc(100% + 8px);
 
-  min-width: 100%;
-  max-height: 320px;
+  min-width: 100%; /* не меньше триггера */
+  max-height: 260px; /* как в макете */
   overflow: auto;
 
   background: #fff;
@@ -111,15 +116,32 @@
   box-sizing: border-box;
 }
 
+/* пункты меню */
 .selectBox :global([role="option"]),
 .selectBox :global(li) {
   padding: 8px 14px;
   line-height: 1.2;
   cursor: pointer;
+  color: var(--main, #121417);
+  white-space: nowrap;
+}
+.selectBox :global([role="option"]:hover) {
+  background: #f0f2f8;
+}
+.selectBox :global([aria-selected="true"]) {
+  background: #eef1f8;
 }
 
-.selectBox :global([aria-selected="true"]) {
-  background: #f0f2f8;
+/* Скролл уже стилизован, но на всякий случай добавим базовый вид */
+.selectBox :global([role="listbox"]::-webkit-scrollbar) {
+  width: 6px;
+}
+.selectBox :global([role="listbox"]::-webkit-scrollbar-thumb) {
+  background: #d5d9e3;
+  border-radius: 6px;
+}
+.selectBox :global([role="listbox"]::-webkit-scrollbar-track) {
+  background: transparent;
 }
 
 /* =========================
@@ -134,7 +156,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
-  height: 44px;
+  height: 44px; /* фикс */
   background: var(--inputs, #f5f6fb);
   border: 1px solid var(--gray-200, #e6e8ef);
   border-radius: 12px;
@@ -152,6 +174,7 @@
   border-left: 1px solid var(--gray-200, #e6e8ef);
 }
 
+/* инпуты внутри */
 .part :global(input) {
   width: 100%;
   height: 100%;
@@ -161,10 +184,23 @@
   padding: 0;
   margin: 0;
   font: inherit;
-  color: var(--main, #121417);
+  color: var(--main, #121417); /* цвет текста */
+  box-sizing: border-box;
 }
 
-/* Кнопка */
+/* плейсхолдер светлее (как на макете) */
+.part :global(input::placeholder) {
+  color: var(--gray, #8e929a);
+}
+
+/* гасим стандартный blue outline */
+.part :global(input:focus),
+.part :global(input:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Кнопка поиска тянется на ширину своей колонки (156px) */
 .searchBtn {
   width: 100%;
 }

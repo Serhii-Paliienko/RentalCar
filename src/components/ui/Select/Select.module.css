@@ -2,69 +2,80 @@
   display: inline-grid;
   grid-template-columns: 1fr 44px; /* контент + слот иконки */
   align-items: center;
-  height: var(--control-h, 68px);
+
+  /* ДОЛЖЕН СОВПАДАТЬ С Input: 44px */
+  height: var(--control-h, 44px);
+
+  /* как в макете — горизонтальный паддинг 14px */
   padding-inline: 16px 0;
+
   background: var(--inputs, #f5f6fb);
   color: var(--main, #121417);
   border: 1px solid var(--gray-200, #e6e8ef);
   border-radius: 12px;
   cursor: pointer;
+
+  transition: background-color var(--tr-fast, 0.15s ease),
+    border-color var(--tr-fast, 0.15s ease), color var(--tr-fast, 0.15s ease);
 }
 
+/* Скрываем нативную стрелку и даём контролу занять всю высоту */
 .control {
   appearance: none;
   background: transparent;
   border: 0;
-  padding: 0;
   margin: 0;
+  padding: 0;
+
   height: 100%;
   width: 100%;
-  font: var(--body, 16px/1.4 var(--font-family, Manrope));
+
+  font: var(--body, 16px/20px var(--font-family));
   color: inherit;
+  cursor: inherit;
 }
 
+/* Placeholder (первая option со value="") должен быть серым как в Input */
+.control:has(option:checked[value=""]) {
+  color: var(--gray, #8e929a);
+}
+
+/* Блок Chevron справа */
 .chevron {
-  position: relative;
-  display: grid;
+  display: inline-grid;
   place-items: center;
-  user-select: none;
-  pointer-events: none;
-  height: 100%;
-  color: var(--main, #121417);
 }
-
-.chevron svg {
-  inline-size: 16px;
-  block-size: 16px;
-  display: none;
-}
-
-/* переключаем иконки по состоянию контейнера */
-.root[data-open="false"] .iconClosed {
-  display: block;
-}
-.root[data-open="true"] .iconOpen {
-  display: block;
-}
-
-/* фолбэк если SVG не загрузился */
-.fallback {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-size: 14px;
+.iconClosed,
+.iconOpen {
+  width: 16px;
+  height: 16px;
   line-height: 1;
 }
-.root .iconClosed + .iconOpen + .fallback {
+
+/* По умолчанию показываем закрытую стрелку; когда селект в фокусе — открытую */
+.root .iconOpen {
+  display: none;
+}
+.root:focus-within .iconClosed {
+  display: none;
+}
+.root:focus-within .iconOpen {
+  display: inline;
+}
+
+/* Фолбэк на случай отсутствия спрайта */
+.root .fallback {
   display: none;
 }
 
+/* Ховеры */
 .root:hover {
   background: var(--inputs-hover, #eef1f7);
 }
+
+/* УБИРАЕМ СИНЮЮ АУРУ: ни outline, ни box-shadow, ни смены цвета бордера */
 .root:focus-within {
-  outline: auto;
-  box-shadow: none;
-  border-color: var(--button, #3470ff);
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: var(--gray-200, #e6e8ef) !important;
 }

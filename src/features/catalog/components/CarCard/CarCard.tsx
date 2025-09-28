@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { Car } from "@api/types";
 import { useFavorites } from "@store/favorites.store";
 import { formatMileage, formatPriceUsd } from "@utils/format";
+import Button from "@components/ui/Button/Button"; // переиспользуем общий Button
 import s from "./CarCard.module.css";
 
 function splitAddress(address: string): { city?: string; country?: string } {
@@ -16,8 +17,10 @@ function splitAddress(address: string): { city?: string; country?: string } {
 }
 
 export default function CarCard({ car }: { car: Car }) {
-  // ВАЖНО: подписываемся на ids, иначе кнопка «сердце» не будет ре-рендерить карточку
-  const fav = useFavorites((st) => st.ids.includes(car.id));
+  const navigate = useNavigate();
+
+  // Подписка на примитив → мгновенный ререндер сердца
+  const isFav = useFavorites((st) => st.ids.includes(car.id));
   const toggle = useFavorites((st) => st.toggle);
 
   const { city, country } = splitAddress(car.address);
@@ -32,15 +35,18 @@ export default function CarCard({ car }: { car: Car }) {
           loading="lazy"
         />
 
+        {/* Heart overlay: базовые цвета из твоего CSS, актив — через filled-символ */}
         <button
           type="button"
-          className={fav ? `${s.favBtn} ${s.favBtnActive}` : s.favBtn}
-          aria-pressed={fav}
-          aria-label={fav ? "Remove from favorites" : "Add to favorites"}
+          className={isFav ? `${s.favBtn} ${s.favBtnActive}` : s.favBtn}
+          aria-pressed={isFav}
+          aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
           onClick={() => toggle(car.id)}
         >
           <svg className={s.favIcon} aria-hidden="true" focusable="false">
-            <use href="/sprite.svg#heart" />
+            <use
+              href={isFav ? "/sprite.svg#hero_filled" : "/sprite.svg#heart"}
+            />
           </svg>
         </button>
       </div>
@@ -66,12 +72,16 @@ export default function CarCard({ car }: { car: Car }) {
             <span className={s.chip}>{formatMileage(car.mileage)}</span>
           </div>
         </div>
-
-        <div className={s.actions}>
-          <Link to={`/catalog/${car.id}`} className={s.btn}>
-            Read more
-          </Link>
-        </div>
+      </div>
+      <div className={s.actions}>
+        {/* Кнопка из элементов; ширину добираем через className */}
+        <Button
+          className={s.btnFull}
+          onClick={() => navigate(`/catalog/${car.id}`)}
+          aria-label={`Read more about ${car.brand} ${car.model}`}
+        >
+          Read more
+        </Button>
       </div>
     </article>
   );

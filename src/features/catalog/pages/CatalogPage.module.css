@@ -78,17 +78,17 @@
 .more {
   display: flex;
   justify-content: center;
-  padding-block: 16px 32px;
   gap: 12px;
+  margin-top: 80px;
+  margin-bottom: 124px;
 }
 .moreBtn {
-  background: var(--button, #3470ff);
-  color: #fff;
+  color: var(--main);
+  background-color: var(--white);
   border: 1px solid var(--button, #3470ff);
-  padding: var(--sp-2, 8px) var(--sp-4, 16px);
+  padding: var(--sp-2, 12px) var(--sp-4, 38px);
   border-radius: 12px;
   line-height: 20px;
-  font-weight: 600;
 }
 .moreBtn:disabled {
   opacity: 0.6;
