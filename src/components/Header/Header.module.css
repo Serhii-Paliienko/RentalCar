@@ -5,8 +5,8 @@
   z-index: 10;
   background: var(--badges);
   border-bottom: 1px solid var(--badges);
-  margin-bottom: 4px;
   height: 68px;
+  margin-bottom: 4px;
   padding-top: 26px;
 }
 
@@ -28,6 +28,7 @@
 .link {
   color: var(--main);
   text-decoration: none;
+  font: var(--body);
 }
 
 .active {

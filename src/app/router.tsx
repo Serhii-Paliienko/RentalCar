@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import Header from "@components/Header/Header";
+import Seo from "@components/Seo/Seo";
 
 // ленивые страницы
 const HomePage = lazy(() => import("@pages/HomePage/HomePage"));
@@ -11,10 +12,16 @@ const NotFound = lazy(() => import("@pages/NotFound/NotFound"));
 function RootLayout() {
   return (
     <div id="app-root">
+      {/* SEO head tags (не создаёт элементов в <body>) */}
+      <Seo />
+      {/* Статичный хедер: остаётся в потоке наверху */}
       <Header />
-      <Suspense fallback={<div className="container">Loading…</div>}>
-        <Outlet />
-      </Suspense>
+      {/* Страничная область под хедером */}
+      <main className="page">
+        <Suspense fallback={<div className="container">Loading…</div>}>
+          <Outlet />
+        </Suspense>
+      </main>
     </div>
   );
 }
@@ -27,14 +34,9 @@ export const router = createBrowserRouter([
       <div className="container">Something went wrong. Try reload.</div>
     ),
     children: [
-      // ✅ Домашняя как индекс-роут (без редиректа на каталог)
       { index: true, element: <HomePage /> },
-
-      // Каталог и детали
       { path: "catalog", element: <CatalogPage /> },
       { path: "catalog/:id", element: <DetailsPage /> },
-
-      // 404
       { path: "*", element: <NotFound /> },
     ],
   },

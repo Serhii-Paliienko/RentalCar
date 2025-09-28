@@ -1,17 +1,15 @@
 @import "modern-normalize/modern-normalize.css";
 @import "./tokens.css";
 
+/* Базовая высота документа */
 html,
 body,
 #root {
   height: 100%;
 }
 
-main {
-  flex-grow: 1;
-}
-
 body {
+  margin: 0; /* убираем дефолтные 8px */
   font-family: var(--font-family);
   color: var(--main);
   background: var(--white);
@@ -20,22 +18,87 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* единый контейнер */
+/* Корневой лэйаут: Header (auto) + page (1fr)
+   — фиксируем высоту под вьюпорт, чтобы проценты были "дефинитными"
+   — создаём зазор между хедером и контентом через row-gap (вместо margin у Header)
+   — обнуляем bottom-margin у ПЕРВОГО ребёнка (#app-root > *:first-child), чтобы исключить двойной отступ и подползание hero */
+#app-root {
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr); /* 1: header, 2: контент */
+  row-gap: var(--header-gap, 4px); /* тот самый зазор под хедером */
+}
+
+/* фолбэки для старых браузеров */
+@supports not (height: 100dvh) {
+  #app-root {
+    height: 100svh;
+  }
+}
+@supports not (height: 100svh) {
+  #app-root {
+    height: 100vh;
+  }
+}
+
+/* ❗️Нейтрализуем margin-bottom у Header, не трогая модульные стили Header */
+#app-root > *:first-child {
+  margin-bottom: 0;
+}
+
+/* Область страницы под хедером */
+.page {
+  min-height: 0; /* предотвращает переполнение во второй строке сетки */
+  height: 100%; /* теперь 100% — это вся строка grid под хедером */
+
+  /* Hero: занять всю область .page, но минимум 700px */
+  --hero-h: max(100%, 700px);
+}
+
+/* Единый контейнер */
 .container {
   max-width: var(--container-max);
   padding-inline: var(--container-x);
   margin-inline: auto;
 }
 
-:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
-/* утилита для фонового hero, если нужен CSS background */
+/* Утилита для фонового hero, если нужен CSS background */
 .hero-bg {
   background-image: var(--hero-img);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+/* ===== Focus styles (брендовая подсветка ТОЛЬКО для интерактивных) ===== */
+:is(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    [tabindex]:not([tabindex="-1"])
+  ):focus-visible {
+  outline: none;
+  box-shadow: var(
+    --focus-ring,
+    0 0 0 2px rgba(255, 255, 255, 0.9),
+    0 0 0 4px rgba(45, 122, 255, 0.75)
+  );
+}
+
+@media (forced-colors: active) {
+  :is(
+      a,
+      button,
+      input,
+      select,
+      textarea,
+      [role="button"],
+      [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+    outline: 2px solid CanvasText;
+    box-shadow: none;
+  }
 }

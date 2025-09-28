@@ -29,12 +29,6 @@ export default function Hero() {
 
       {/* ВАЖНО: никаких дополнительных пустых .container здесь не нужно */}
       <div className={s.inner}>
-        <div className={s.dots} aria-hidden="true">
-          <span className={s.dot} />
-          <span className={`${s.dot} ${s.dotActive}`} />
-          <span className={s.dot} />
-        </div>
-
         <h1 className={s.title}>Find your perfect rental car</h1>
         <p className={s.subtitle}>
           Reliable and budget-friendly rentals for any journey
