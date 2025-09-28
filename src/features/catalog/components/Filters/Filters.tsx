@@ -1,16 +1,12 @@
+// src/features/catalog/components/Filters/Filters.tsx
 import { Formik, Form, Field } from "formik";
 import type { FieldProps } from "formik";
 import { useQuery } from "@tanstack/react-query";
-import Input from "@components/ui/Input";
 import Select from "@components/ui/Select/Select";
 import Button from "@components/ui/Button";
+import Input from "@components/ui/Input";
 import { getBrands } from "@api/cars";
-/**
- * В проекте уже есть утилита чисел — @utils/number
- * normalizeIntString: оставляет только цифры
- * normalizeRange: если min > max — свапает
- */
-import { normalizeIntString, normalizeRange } from "@utils/number";
+import { normalizeIntString } from "@utils/number";
 import s from "./Filters.module.css";
 
 type Values = {
@@ -21,12 +17,14 @@ type Values = {
 };
 
 type Props = {
-  initial: Values;
-  onSubmit: (v: Values) => void;
+  initial?: Partial<Values>;
+  onSubmit: (values: Values) => void;
 };
 
+const PRICE_OPTIONS = ["30", "40", "50", "60", "70", "80"];
+
 export default function Filters({ initial, onSubmit }: Props) {
-  const brandsQ = useQuery({
+  const { data: brands } = useQuery({
     queryKey: ["brands"],
     queryFn: getBrands,
     staleTime: 60_000,
@@ -45,112 +43,130 @@ export default function Filters({ initial, onSubmit }: Props) {
   };
 
   return (
-    <div className={s.wrap}>
+    <section className={s.wrap}>
       <Formik
         initialValues={init}
         enableReinitialize
         onSubmit={(values) => {
-          const { min, max } = normalizeRange(
-            values.minMileage,
-            values.maxMileage
-          );
+          let min = normalizeIntString(values.minMileage);
+          let max = normalizeIntString(values.maxMileage);
+          if (min && max && Number(min) > Number(max)) {
+            const t = min;
+            min = max;
+            max = t;
+          }
           onSubmit({
-            brand: values.brand,
-            rentalPrice: values.rentalPrice,
+            brand: (values.brand ?? "").trim(),
+            rentalPrice: (values.rentalPrice ?? "").trim(),
             minMileage: min,
             maxMileage: max,
           });
         }}
       >
-        <Form className={s.form} aria-label="Filters form">
-          <div className={s.row}>
-            {/* Brand */}
-            <Field name="brand">
-              {({ field }: FieldProps<string>) => (
-                <Select {...field} ariaLabel="Car brand" title="Car brand">
-                  <option value="">Choose a brand</option>
-                  {Array.isArray(brandsQ.data) &&
-                    brandsQ.data.map((b) => (
-                      <option key={b} value={b}>
-                        {b}
-                      </option>
-                    ))}
-                </Select>
-              )}
-            </Field>
+        {({ setFieldValue }) => (
+          <Form className={s.form} role="search" aria-label="Catalog filters">
+            <div className={s.row}>
+              {/* Brand */}
+              <div className={s.group}>
+                <label className={s.label} htmlFor="brand">
+                  Car brand
+                </label>
+                <div className={s.control}>
+                  <Field name="brand">
+                    {({ field }: FieldProps<string>) => (
+                      <Select {...field} id="brand" ariaLabel="Car brand">
+                        <option value="">Choose a brand</option>
+                        {brands?.map((b) => (
+                          <option key={b} value={b}>
+                            {b}
+                          </option>
+                        ))}
+                      </Select>
+                    )}
+                  </Field>
+                </div>
+              </div>
 
-            {/* Price per hour */}
-            <Field name="rentalPrice">
-              {({ field }: FieldProps<string>) => (
-                <Select
-                  {...field}
-                  ariaLabel="Price per hour"
-                  title="Price per hour"
+              {/* Price */}
+              <div className={s.group}>
+                <label className={s.label} htmlFor="rentalPrice">
+                  Price / hour
+                </label>
+                <div className={s.control}>
+                  <Field name="rentalPrice">
+                    {({ field }: FieldProps<string>) => (
+                      <Select
+                        {...field}
+                        id="rentalPrice"
+                        ariaLabel="Price per hour"
+                      >
+                        <option value="">Choose a price</option>
+                        {PRICE_OPTIONS.map((p) => (
+                          <option key={p} value={p}>
+                            ${p}
+                          </option>
+                        ))}
+                      </Select>
+                    )}
+                  </Field>
+                </div>
+              </div>
+
+              {/* Mileage */}
+              <div className={s.mileage}>
+                <span className={s.label}>Car mileage / km</span>
+                <div
+                  className={s.split}
+                  role="group"
+                  aria-label="Mileage range"
                 >
-                  <option value="">Choose a price</option>
-                  <option value="30">$30</option>
-                  <option value="40">$40</option>
-                  <option value="50">$50</option>
-                  <option value="60">$60</option>
-                  <option value="70">$70</option>
-                  <option value="80">$80</option>
-                </Select>
-              )}
-            </Field>
+                  <span className={s.part}>
+                    <Field name="minMileage">
+                      {({ field }: FieldProps<string>) => (
+                        <Input
+                          {...field}
+                          inputMode="numeric"
+                          placeholder="From"
+                          aria-label="Mileage from"
+                          onChange={(e) =>
+                            setFieldValue(
+                              "minMileage",
+                              normalizeIntString(e.target.value)
+                            )
+                          }
+                        />
+                      )}
+                    </Field>
+                  </span>
+                  <span className={s.part}>
+                    <Field name="maxMileage">
+                      {({ field }: FieldProps<string>) => (
+                        <Input
+                          {...field}
+                          inputMode="numeric"
+                          placeholder="To"
+                          aria-label="Mileage to"
+                          onChange={(e) =>
+                            setFieldValue(
+                              "maxMileage",
+                              normalizeIntString(e.target.value)
+                            )
+                          }
+                        />
+                      )}
+                    </Field>
+                  </span>
+                </div>
+              </div>
 
-            {/* Mileage From–To (единый контрол с перегородкой) */}
-            <div className={s.mileage} aria-label="Car mileage, km">
-              <Field name="minMileage">
-                {({ field, form }: FieldProps<string>) => (
-                  <Input
-                    {...field}
-                    className={s.field}
-                    placeholder="From"
-                    inputMode="numeric"
-                    pattern="\d*"
-                    onChange={(e) =>
-                      form.setFieldValue(
-                        field.name,
-                        normalizeIntString(e.currentTarget.value)
-                      )
-                    }
-                    aria-label="Mileage from"
-                  />
-                )}
-              </Field>
-
-              <span className={s.divider} aria-hidden />
-
-              <Field name="maxMileage">
-                {({ field, form }: FieldProps<string>) => (
-                  <Input
-                    {...field}
-                    className={s.field}
-                    placeholder="To"
-                    inputMode="numeric"
-                    pattern="\d*"
-                    onChange={(e) =>
-                      form.setFieldValue(
-                        field.name,
-                        normalizeIntString(e.currentTarget.value)
-                      )
-                    }
-                    aria-label="Mileage to"
-                  />
-                )}
-              </Field>
+              {/* Search */}
+              <Button type="submit" className={s.searchBtn}>
+                Search
+              </Button>
             </div>
-
-            <Button
-              type="submit"
-              className={s.searchBtn}
-              aria-label="Apply filters"
-            >
-              Search
-            </Button>
-          </div>
-        </Form>
+          </Form>
+        )}
       </Formik>
-    </div>
+    </section>
   );
 }

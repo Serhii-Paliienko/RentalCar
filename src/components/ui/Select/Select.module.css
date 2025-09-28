@@ -1,8 +1,8 @@
 .root {
   display: inline-grid;
-  grid-template-columns: 1fr 44px; /* текст + зона иконки */
+  grid-template-columns: 1fr 44px; /* контент + слот иконки */
   align-items: center;
-  height: var(--control-h, 44px);
+  height: var(--control-h, 68px);
   padding-inline: 16px 0;
   background: var(--inputs, #f5f6fb);
   color: var(--main, #121417);
@@ -24,6 +24,7 @@
 }
 
 .chevron {
+  position: relative;
   display: grid;
   place-items: center;
   user-select: none;
@@ -32,11 +33,38 @@
   color: var(--main, #121417);
 }
 
+.chevron svg {
+  inline-size: 16px;
+  block-size: 16px;
+  display: none;
+}
+
+/* переключаем иконки по состоянию контейнера */
+.root[data-open="false"] .iconClosed {
+  display: block;
+}
+.root[data-open="true"] .iconOpen {
+  display: block;
+}
+
+/* фолбэк если SVG не загрузился */
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  line-height: 1;
+}
+.root .iconClosed + .iconOpen + .fallback {
+  display: none;
+}
+
 .root:hover {
   background: var(--inputs-hover, #eef1f7);
 }
 .root:focus-within {
-  outline: auto; /* нативный */
+  outline: auto;
   box-shadow: none;
   border-color: var(--button, #3470ff);
 }

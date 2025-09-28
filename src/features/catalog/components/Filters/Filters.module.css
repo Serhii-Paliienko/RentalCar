@@ -1,72 +1,118 @@
+/* src/features/catalog/components/Filters/Filters.module.css */
+
+/* Блок фильтров: не добавляем верхний отступ — его даёт header (margin-bottom) */
 .wrap {
+  width: 100%;
+  margin-top: 0; /* учитываем margin-bottom у Header */
+  margin-bottom: 32px; /* зазор до карточек по макету */
 }
 
 .form {
   width: 100%;
 }
 
-/* Ряд: 204 | 196 | 320 | 156 — как в макете. Отступ от хедера 84px, снизу 24px */
+/* Сетка по Figma:
+   196 | 196 | 320 | 156, gap 16
+   Контентная ширина: 916px — центрируем .row
+*/
 .row {
-  --control-h: 68px;
   display: grid;
-  grid-template-columns: 204px 196px 320px 156px;
-  align-items: center;
+  grid-template-columns: 196px 196px 320px 156px;
   gap: 16px;
-  width: max-content; /* суммарно 924px */
-  margin: 84px auto 24px;
+  align-items: end;
+  max-width: 916px;
+  margin-inline: auto; /* центрирование */
 }
 
-/* Слитный контрол пробега внутри колонки 320 */
-.mileage {
-  position: relative;
+/* подпись + контрол */
+.group {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  height: var(--control-h);
+  gap: 8px;
+}
+
+.label {
+  font-size: 12px;
+  line-height: 1.33;
+  color: var(--gray, #8e929a);
+}
+
+/* Контрол: ЖЁСТКАЯ высота 44px, без var() и глобалок */
+.control {
+  height: 44px;
   background: var(--inputs, #f5f6fb);
   border: 1px solid var(--gray-200, #e6e8ef);
   border-radius: 12px;
+  display: grid;
+  align-items: center;
+  padding-inline: 14px; /* отступы как на скрине */
+  box-sizing: border-box;
+}
+
+/* Сброс нативных стилей внутри .control (поверх глобальных) */
+.control select,
+.control input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  line-height: normal;
   color: var(--main, #121417);
+  box-sizing: border-box;
+}
+
+/* Mileage split (From | To) — тоже 44px */
+.mileage {
+  display: grid;
+  gap: 8px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  height: 44px;
+  background: var(--inputs, #f5f6fb);
+  border: 1px solid var(--gray-200, #e6e8ef);
+  border-radius: 12px;
   overflow: hidden;
 }
 
-.field {
-  height: 100%;
-  width: 100%;
-  padding: 0 16px;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: var(--body, 16px/1.4 var(--font-family, Manrope));
-}
-.field:focus {
-  outline: none;
-}
-.mileage:focus-within {
-  border-color: var(--button, #3470ff);
-  outline: auto;
+.part {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  box-sizing: border-box;
 }
 
-.divider {
-  position: absolute;
-  inset-inline: 50%;
-  top: 12px;
-  bottom: 12px;
-  width: 1px;
-  transform: translateX(-50%);
-  background: var(--gray-200, #e6e8ef);
-  pointer-events: none;
+.part + .part {
+  border-left: 1px solid var(--gray-200, #e6e8ef);
 }
 
-/* Контролы (селекты/инпуты) — высота 68px */
-.row :is(select, input) {
-  height: var(--control-h);
-  width: 100%;
-}
-
-/* Кнопка Search — 156x44 (центрируется по строке) */
+/* Кнопка в своей колонке тянется на всю ширину (156px); её базовая высота = 44px из общего Button */
 .searchBtn {
-  --control-h: 44px;
-  min-width: 156px;
-  height: var(--control-h);
+  width: 100%;
+}
+
+/* Респонсив */
+@media (max-width: 1100px) {
+  .row {
+    grid-template-columns: 1fr 1fr 1.2fr 156px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 860px) {
+  .row {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+  .searchBtn {
+    width: 156px;
+    justify-self: start;
+    margin-top: 8px;
+  }
 }
