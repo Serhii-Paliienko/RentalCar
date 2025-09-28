@@ -1,27 +1,31 @@
-/* src/components/ui/Input/Input.module.css */
-.input {
+.root {
   display: inline-flex;
   align-items: center;
-
-  height: 48px;
+  height: var(--control-h, 44px);
   padding: 0 16px;
+  background: var(--inputs, #f5f6fb);
+  color: var(--main, #121417);
+  border: 1px solid var(--gray-200, #e6e8ef);
+  border-radius: 12px;
+}
 
+.input {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  height: 100%;
   width: 100%;
-  border-radius: 10px;
-  border: 1px solid var(--gray-light);
-  background: var(--inputs);
-
-  color: var(--main);
-  font-family: var(--font-family, Manrope), system-ui;
-  font-size: 16px;
-  line-height: 20px;
-  outline: none;
+  font: var(--body, 16px/1.4 var(--font-family, Manrope));
+  color: inherit;
 }
 
-.input::placeholder {
-  color: var(--gray);
+.root:hover {
+  background: var(--inputs-hover, #eef1f7);
 }
-
-.input:focus-visible {
-  border-color: var(--button);
+.root:focus-within {
+  outline: auto; /* нативный фокус */
+  box-shadow: none;
+  border-color: var(--button, #3470ff);
 }

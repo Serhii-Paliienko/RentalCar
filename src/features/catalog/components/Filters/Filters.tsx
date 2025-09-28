@@ -1,4 +1,5 @@
 import { Formik, Form, Field } from "formik";
+import type { FieldProps } from "formik";
 import { useQuery } from "@tanstack/react-query";
 import Input from "@components/ui/Input";
 import Select from "@components/ui/Select/Select";
@@ -14,62 +15,88 @@ type Values = {
 };
 
 export default function Filters({
-  initial,
   onSubmit,
+  initial,
 }: {
-  initial: Values;
-  onSubmit?: (v: Values) => void;
+  onSubmit?: (values: Values) => void;
+  initial?: Values;
 }) {
-  const { data: brands } = useQuery({
+  const { data: brands = [] } = useQuery({
     queryKey: ["brands"],
     queryFn: getBrands,
+    staleTime: 60_000,
+    gcTime: 10 * 60_000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: 1,
   });
 
-  const prices = ["30", "40", "50", "60", "70", "80"];
+  const init: Values = initial ?? {
+    brand: "",
+    rentalPrice: "",
+    minMileage: "",
+    maxMileage: "",
+  };
 
   return (
-    <div className={s.wrap}>
+    /* 16px gap под хедером по макету */
+    <div className={`container ${s.wrap}`} data-gap="16">
       <Formik
-        initialValues={initial}
         enableReinitialize
+        initialValues={init}
         onSubmit={(v) => onSubmit?.(v)}
       >
-        <Form className={s.form}>
+        <Form className={s.form} role="search" aria-label="Cars filter">
           <div className={s.row}>
-            <Field as={Select} name="brand" ariaLabel="Car brand">
-              <option value="">Choose a brand</option>
-              {(brands ?? []).map((b: string) => (
-                <option key={b} value={b}>
-                  {b}
-                </option>
-              ))}
+            {/* Brand */}
+            <Field name="brand">
+              {({ field }: FieldProps) => (
+                <Select {...field} aria-label="Car brand">
+                  <option value="">Choose a brand</option>
+                  {brands.map((b: string) => (
+                    <option key={b} value={b}>
+                      {b}
+                    </option>
+                  ))}
+                </Select>
+              )}
             </Field>
 
-            <Field as={Select} name="rentalPrice" ariaLabel="Price / 1 hour">
-              <option value="">Choose a price</option>
-              {prices.map((p) => (
-                <option key={p} value={p}>
-                  To ${p}
-                </option>
-              ))}
+            {/* Price (per hour) */}
+            <Field name="rentalPrice">
+              {({ field }: FieldProps) => (
+                <Select {...field} aria-label="Price / 1 hour">
+                  <option value="">Choose a price</option>
+                  {Array.from({ length: 20 }, (_, i) => (i + 1) * 10).map(
+                    (p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    )
+                  )}
+                </Select>
+              )}
             </Field>
 
-            <div className={s.range}>
-              <Field
-                as={Input}
-                name="minMileage"
-                placeholder="From"
-                inputMode="numeric"
-              />
-              <Field
-                as={Input}
-                name="maxMileage"
-                placeholder="To"
-                inputMode="numeric"
-              />
+            {/* Mileage */}
+            <div className={s.mileageGroup} aria-label="Car mileage / km">
+              <Field name="minMileage">
+                {({ field }: FieldProps) => (
+                  <Input {...field} placeholder="From" inputMode="numeric" />
+                )}
+              </Field>
+              <Field name="maxMileage">
+                {({ field }: FieldProps) => (
+                  <Input {...field} placeholder="To" inputMode="numeric" />
+                )}
+              </Field>
             </div>
 
-            <Button type="submit">Search</Button>
+            {/* Search */}
+            <Button type="submit" className={s.searchBtn}>
+              Search
+            </Button>
           </div>
         </Form>
       </Formik>

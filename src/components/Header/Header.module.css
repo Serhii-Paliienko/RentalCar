@@ -1,12 +1,10 @@
-/* src/components/Header/Header.module.css */
 .header {
   position: sticky;
   top: 0;
   z-index: 10;
   background: var(--badges);
-  border-bottom: 1px solid var(--badges);
-  height: 68px;
   margin-bottom: 4px;
+  height: 68px;
   padding-top: 26px;
 }
 
@@ -26,11 +24,26 @@
 }
 
 .link {
-  color: var(--main);
-  text-decoration: none;
   font: var(--body);
+  color: var(--main);
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition: color 0.2s ease-in-out;
 }
 
+.link:hover {
+  color: var(--button);
+}
+
+/* Нативная клавиатурная обводка, без кастомных ring’ов */
+.link:focus-visible {
+  outline: auto;
+  color: var(--button);
+}
+
+/* Активный пункт меню */
 .active {
   color: var(--button);
 }

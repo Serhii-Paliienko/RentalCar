@@ -1,93 +1,83 @@
 @import "modern-normalize/modern-normalize.css";
 @import "./tokens.css";
 
-/* Базовая высота документа */
+/* Viewport unit с фолбэками */
+:root {
+  --vh: 100dvh;
+}
+@supports not (height: 100dvh) {
+  :root {
+    --vh: 100svh;
+  }
+}
+@supports not (height: 100svh) {
+  :root {
+    --vh: 100vh;
+  }
+}
+
+/* Базовая типографика и цвета */
 html,
 body,
 #root {
   height: 100%;
 }
-
 body {
-  margin: 0; /* убираем дефолтные 8px */
-  font-family: var(--font-family);
+  margin: 0;
   color: var(--main);
-  background: var(--white);
-  text-rendering: optimizeLegibility;
+  font-family: var(--font-family);
+  font-size: var(--body-fs);
+  line-height: var(--body-lh);
+  font-weight: var(--body-fw);
+  background: #fff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Корневой лэйаут: Header (auto) + page (1fr)
-   — фиксируем высоту под вьюпорт, чтобы проценты были "дефинитными"
-   — создаём зазор между хедером и контентом через row-gap (вместо margin у Header)
-   — обнуляем bottom-margin у ПЕРВОГО ребёнка (#app-root > *:first-child), чтобы исключить двойной отступ и подползание hero */
-#app-root {
-  height: 100dvh;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr); /* 1: header, 2: контент */
-  row-gap: var(--header-gap, 4px); /* тот самый зазор под хедером */
+/* Ссылки по умолчанию */
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* фолбэки для старых браузеров */
-@supports not (height: 100dvh) {
-  #app-root {
-    height: 100svh;
-  }
-}
-@supports not (height: 100svh) {
-  #app-root {
-    height: 100vh;
-  }
-}
-
-/* ❗️Нейтрализуем margin-bottom у Header, не трогая модульные стили Header */
-#app-root > *:first-child {
-  margin-bottom: 0;
-}
-
-/* Область страницы под хедером */
-.page {
-  min-height: 0; /* предотвращает переполнение во второй строке сетки */
-  height: 100%; /* теперь 100% — это вся строка grid под хедером */
-
-  /* Hero: занять всю область .page, но минимум 700px */
-  --hero-h: max(100%, 700px);
-}
-
-/* Единый контейнер */
+/* Контейнер */
 .container {
-  max-width: var(--container-max);
-  padding-inline: var(--container-x);
+  width: 100%;
+  max-width: 1212px;
   margin-inline: auto;
+  padding-inline: 16px;
 }
 
-/* Утилита для фонового hero, если нужен CSS background */
-.hero-bg {
-  background-image: var(--hero-img);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+/* Лэйаут: header + page. Отступ под хедером даём row-gap. */
+#app-root {
+  min-height: var(--vh);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  row-gap: 4px; /* дефолтный отступ под хедером, как было визуально */
 }
 
-/* ===== Focus styles (брендовая подсветка ТОЛЬКО для интерактивных) ===== */
-:is(
-    a,
-    button,
-    input,
-    select,
-    textarea,
-    [role="button"],
-    [tabindex]:not([tabindex="-1"])
-  ):focus-visible {
+/* Переключатели отступа под хедером для разных страниц (CSS-only) */
+#app-root:has(.page [data-gap="0"]) {
+  row-gap: 0px;
+}
+#app-root:has(.page [data-gap="8"]) {
+  row-gap: 8px;
+}
+#app-root:has(.page [data-gap="16"]) {
+  row-gap: 16px;
+}
+
+/* Контентная область */
+.page {
+  min-height: 0;
+  height: 100%;
+}
+
+/* Глобальный фокус */
+:focus-visible {
   outline: none;
-  box-shadow: var(
-    --focus-ring,
-    0 0 0 2px rgba(255, 255, 255, 0.9),
-    0 0 0 4px rgba(45, 122, 255, 0.75)
-  );
+  box-shadow: var(--focus-ring);
 }
-
 @media (forced-colors: active) {
   :is(
       a,
@@ -101,4 +91,32 @@ body {
     outline: 2px solid CanvasText;
     box-shadow: none;
   }
+}
+
+/* Глобальные плавности */
+:is(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    [tabindex]:not([tabindex="-1"])
+  ) {
+  transition: background-color var(--tr-fast, 0.15s ease),
+    color var(--tr-fast, 0.15s ease), border-color var(--tr-fast, 0.15s ease),
+    box-shadow var(--tr-fast, 0.15s ease), transform var(--tr-fast, 0.15s ease);
+}
+
+/* === NEW: утилита для скрытия визуально, но доступного для скринридеров === */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }

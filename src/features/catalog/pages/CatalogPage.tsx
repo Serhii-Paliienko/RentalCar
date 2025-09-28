@@ -13,20 +13,18 @@ export default function CatalogPage() {
   const loc = useLocation();
   const navigate = useNavigate();
 
-  // только rentalPrice
   const filters = readFilters(loc.search);
   const { instantFromCache, placeholderCap } = readCatalogSettings(loc.search);
 
   const {
+    // data — не используем, поэтому не деструктурируем
     cars,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
     hasAnyFilter,
     isEmptyAfterAllPages,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-    isFetchingNextPage,
-    isRefetching,
-    error,
   } = useCarsInfinite(
     {
       brand: filters.brand || "",
@@ -53,6 +51,7 @@ export default function CatalogPage() {
 
   return (
     <main className="container">
+      {/* SEO: h1 нужен роботам; визуально скрыт утилитой из globals.css */}
       <h1 className="visually-hidden">Catalog</h1>
 
       <Filters
@@ -65,9 +64,13 @@ export default function CatalogPage() {
         }}
       />
 
-      {isLoading && <div className={s.state}>Loading…</div>}
-      {error && <div className={s.state}>Failed to load.</div>}
-      {isRefetching && <div className={s.state}>Updating…</div>}
+      {isLoading && (
+        <section className={s.grid} aria-label="Cars grid loading">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className={s.skeleton} aria-hidden />
+          ))}
+        </section>
+      )}
 
       {!isLoading && cars.length > 0 && (
         <section className={s.grid} aria-label="Cars grid">

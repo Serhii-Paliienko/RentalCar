@@ -1,80 +1,113 @@
 .hero {
   position: relative;
-  isolation: isolate; /* собственный стек */
-  min-height: var(--hero-h, 700px);
+  display: grid;
+  align-items: end;
+  min-height: calc(
+    var(--vh) - var(--header-total, var(--header-box, var(--header-h, 68px)))
+  );
   color: var(--white);
+  overflow: hidden;
+
+  /* локальные переменные под макет */
+  --hero-block-max: 783px;
+  --hero-pad-top: 80px;
+  --hero-pad-bottom: 60px;
+  --hero-gap-title-subtitle: 16px;
+  --hero-gap-subtitle-cta: 40px;
 }
 
-/* затемнение над фото по всей высоте секции */
 .hero::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(16, 24, 40, 0.1) 0%,
-    rgba(16, 24, 40, 0.3) 35%,
-    rgba(16, 24, 40, 0.55) 100%
-  );
-  z-index: 0;
+  background: #000;
+  opacity: 0.2;
   pointer-events: none;
 }
 
-/* фон-картинка */
-.media {
+/* slides */
+.slides {
   position: absolute;
   inset: 0;
-  z-index: -1; /* ниже оверлея */
+  z-index: -1;
+  pointer-events: none;
 }
-.media > img {
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 420ms ease-in-out;
+}
+.slide img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+.slide[data-active] {
+  opacity: 1;
 }
 
-/* контейнер и выравнивание контента */
+/* content */
 .inner {
+  display: flex;
   position: relative;
+  justify-content: center;
+  text-align: center;
   z-index: 1;
-  max-width: var(--container-max, 1440px);
-  margin-inline: auto;
-  padding: 80px var(--container-x, 32px);
-  display: grid;
-  justify-items: center;
-  align-content: center;
-  gap: 16px;
-  min-height: inherit; /* тянем высоту секции */
+  width: 100%;
+  padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
 }
-
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(var(--hero-block-max), 100%);
+}
 .title {
   font: var(--h1);
-  text-align: center;
-  color: var(--white);
+  margin: 0;
 }
 .subtitle {
-  font: var(--body);
-  text-align: center;
-  color: var(--white);
+  font: var(--h3);
+  margin: var(--hero-gap-title-subtitle) 0 0;
   opacity: 0.9;
 }
-
-/* точки-переключатели (декор) */
-.dots {
-  display: grid;
-  grid-auto-flow: column;
-  gap: 6px;
-  margin-bottom: 12px;
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--hero-gap-subtitle-cta);
 }
-.dot {
+
+/* CTA под макет: min-width 276px; высота/радиус совпадают с UI Button */
+.actions [data-cta="hero"] {
+  min-width: 276px;
+  height: 44px;
+  border-radius: 12px; /* дублируем на случай, если у Button переопределят токен */
+}
+
+/* dots feature — 20px от верхнего края hero */
+.dots {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+  opacity: 0.95;
+}
+.dot,
+.dotActive {
   width: 6px;
   height: 6px;
   border-radius: 999px;
   background: var(--badges);
+  display: inline-block;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
 }
 .dotActive {
   background: var(--button);
-}
-
-.actions {
-  margin-top: 8px;
 }

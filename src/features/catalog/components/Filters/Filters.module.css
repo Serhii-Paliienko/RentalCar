@@ -1,12 +1,35 @@
 .wrap {
-  padding-block: 24px;
 }
+
 .form {
-  display: grid;
+  width: 100%;
 }
+
+/* Ряд: 204 | 196 | 320 | 156 — как на макете */
 .row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr auto;
-  gap: 20px;
+  grid-template-columns: 204px 196px 320px 156px;
+  align-items: center;
+  gap: 16px;
 }
-/* никаких .button/.input здесь больше нет */
+
+/* Группа пробега (две ячейки внутри 320) */
+.mileageGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+/* Контролы 68px по макету */
+.row :is(select, input) {
+  --control-h: 68px;
+  height: var(--control-h);
+  width: 100%;
+}
+
+/* Кнопка Search — 156x44, радиус 12 (берётся из Button) */
+.searchBtn {
+  --control-h: 44px;
+  min-width: 156px;
+  height: var(--control-h);
+}

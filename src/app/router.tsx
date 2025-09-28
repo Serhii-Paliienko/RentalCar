@@ -3,7 +3,6 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import Header from "@components/Header/Header";
 import Seo from "@components/Seo/Seo";
 
-// ленивые страницы
 const HomePage = lazy(() => import("@pages/HomePage/HomePage"));
 const CatalogPage = lazy(() => import("@features/catalog/pages/CatalogPage"));
 const DetailsPage = lazy(() => import("@features/details/pages/DetailsPage"));
@@ -12,11 +11,8 @@ const NotFound = lazy(() => import("@pages/NotFound/NotFound"));
 function RootLayout() {
   return (
     <div id="app-root">
-      {/* SEO head tags (не создаёт элементов в <body>) */}
       <Seo />
-      {/* Статичный хедер: остаётся в потоке наверху */}
       <Header />
-      {/* Страничная область под хедером */}
       <main className="page">
         <Suspense fallback={<div className="container">Loading…</div>}>
           <Outlet />

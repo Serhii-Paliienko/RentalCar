@@ -1,6 +1,10 @@
 import Hero from "@features/home/components/Hero/Hero";
 
 export default function HomePage() {
-  // убрали вложенный <main>, чтобы не плодить второй <main> и не ломать проценты
-  return <Hero />;
+  // Полный вьюпорт под хедером ⇒ row-gap = 0
+  return (
+    <div data-gap="0">
+      <Hero />
+    </div>
+  );
 }
