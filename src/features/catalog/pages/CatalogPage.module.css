@@ -12,7 +12,7 @@
   margin: 0;
 }
 
-/* простой прямоугольный скелет */
+/* начальная загрузка: скелет */
 .skeleton {
   height: 280px;
   border: 1px solid var(--clr-border, #e6e8ef);
@@ -21,7 +21,6 @@
   background-size: 400% 100%;
   animation: shimmer 1.4s ease infinite;
 }
-
 @keyframes shimmer {
   0% {
     background-position: 100% 0;
@@ -31,18 +30,57 @@
   }
 }
 
+/* состояния */
 .state {
   padding: 24px;
   text-align: center;
   color: var(--gray, #8e929a);
 }
 
+/* компактные алерты (ошибка/предупреждение) */
+.alert {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  justify-content: start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid;
+  font-size: 14px;
+  line-height: 20px;
+}
+.error {
+  border-color: #ffd6d6;
+  background: #fff1f1;
+  color: #9b1c1c;
+}
+.warn {
+  border-color: #ffe7b3;
+  background: #fff8e6;
+  color: #7a4d00;
+}
+.alert button {
+  justify-self: start;
+  border-radius: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--button, #3470ff);
+  background: var(--button, #3470ff);
+  color: #fff;
+  font-weight: 600;
+}
+.alert button:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* load more */
 .more {
   display: flex;
   justify-content: center;
   padding-block: 16px 32px;
+  gap: 12px;
 }
-
 .moreBtn {
   background: var(--button, #3470ff);
   color: #fff;
@@ -55,6 +93,21 @@
 .moreBtn:disabled {
   opacity: 0.6;
   pointer-events: none;
+}
+
+/* мини-спиннер без инлайнов */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: rgba(255, 255, 255, 1);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* адаптив грид */

@@ -5,29 +5,66 @@
   width: 100%;
 }
 
-/* Ряд: 204 | 196 | 320 | 156 — как на макете */
+/* Ряд: 204 | 196 | 320 | 156 — как в макете. Отступ от хедера 84px, снизу 24px */
 .row {
+  --control-h: 68px;
   display: grid;
   grid-template-columns: 204px 196px 320px 156px;
   align-items: center;
   gap: 16px;
+  width: max-content; /* суммарно 924px */
+  margin: 84px auto 24px;
 }
 
-/* Группа пробега (две ячейки внутри 320) */
-.mileageGroup {
+/* Слитный контрол пробега внутри колонки 320 */
+.mileage {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0;
+  align-items: center;
+  height: var(--control-h);
+  background: var(--inputs, #f5f6fb);
+  border: 1px solid var(--gray-200, #e6e8ef);
+  border-radius: 12px;
+  color: var(--main, #121417);
+  overflow: hidden;
 }
 
-/* Контролы 68px по макету */
+.field {
+  height: 100%;
+  width: 100%;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: var(--body, 16px/1.4 var(--font-family, Manrope));
+}
+.field:focus {
+  outline: none;
+}
+.mileage:focus-within {
+  border-color: var(--button, #3470ff);
+  outline: auto;
+}
+
+.divider {
+  position: absolute;
+  inset-inline: 50%;
+  top: 12px;
+  bottom: 12px;
+  width: 1px;
+  transform: translateX(-50%);
+  background: var(--gray-200, #e6e8ef);
+  pointer-events: none;
+}
+
+/* Контролы (селекты/инпуты) — высота 68px */
 .row :is(select, input) {
-  --control-h: 68px;
   height: var(--control-h);
   width: 100%;
 }
 
-/* Кнопка Search — 156x44, радиус 12 (берётся из Button) */
+/* Кнопка Search — 156x44 (центрируется по строке) */
 .searchBtn {
   --control-h: 44px;
   min-width: 156px;

@@ -8,9 +8,7 @@ import { ToastProvider } from "@app/providers/ToastProvider";
 import "@styles/tokens.css";
 import "@styles/globals.css";
 
-const root = createRoot(document.getElementById("root")!);
-
-root.render(
+createRoot(document.getElementById("root")!).render(
   <TanStackProvider>
     <ToastProvider>
       <RouterProvider router={router} />
