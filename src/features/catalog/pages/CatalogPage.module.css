@@ -1,12 +1,12 @@
 .wrap {
   display: grid;
-  gap: var(--sp-8);
+  gap: var(--sp-8, 32px);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--sp-6);
+  grid-template-columns: repeat(3, 1fr); /* под макет 3 в ряд */
+  gap: var(--sp-6, 24px);
   list-style: none;
   padding: 0;
   margin: 0;
@@ -111,6 +111,13 @@
 }
 
 /* адаптив грид */
+
+@media (min-width: 1440px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 @media (max-width: 1200px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);

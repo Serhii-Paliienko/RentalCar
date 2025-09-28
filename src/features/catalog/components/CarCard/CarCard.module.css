@@ -1,117 +1,89 @@
 .card {
-  border: 1px solid var(--clr-border);
-  border-radius: var(--radius);
-  overflow: hidden;
   display: grid;
+  border: 1px solid var(--clr-border, #e6e8ec);
+  border-radius: 14px; /* ближе к макету */
+  overflow: hidden;
   background: var(--white);
 }
 
+.imageWrap {
+  position: relative;
+}
+
 .img {
+  display: block;
   width: 100%;
-  height: 180px;
+  height: 268px; /* как на макете */
   object-fit: cover;
+}
+
+/* Heart overlay */
+.favBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--clr-border, #e6e8ec);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--gray); /* передаётся в sprite через currentColor */
+  cursor: pointer;
+}
+.favBtn:hover {
+  color: var(--button);
+}
+.favBtnActive {
+  color: #e02424;
+}
+.favIcon {
+  width: 16px;
+  height: 16px;
+  --color1: currentColor; /* символ в спрайте читает эту переменную */
 }
 
 .body {
   display: grid;
-  gap: var(--sp-4);
-  padding: var(--sp-4);
+  gap: 16px;
+  padding: 16px;
 }
 
-.row {
+.head {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: var(--sp-3);
+  gap: 12px;
 }
-
 .title {
-  margin: 0;
-  font-size: var(--h3-fs);
-  line-height: var(--h3-lh);
-  font-weight: var(--h3-fw);
+  font: var(--h3);
+  color: var(--main);
 }
-
+.model {
+  font-weight: 600;
+}
 .price {
-  font-size: var(--h3-fs);
-  line-height: var(--h3-lh);
-  font-weight: 700;
+  font: var(--h3);
 }
 
 .meta {
-  display: inline-flex;
-  gap: 12px;
-  color: var(--clr-muted);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-size: var(--body2-fs);
-  line-height: var(--body2-lh);
-  font-weight: var(--body2-fw);
+  display: grid;
+  gap: 10px;
 }
-
-.actions {
+.row {
   display: flex;
-  gap: var(--sp-3);
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
 }
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: var(--sp-2) var(--sp-4);
-  border-radius: var(--radius);
-  border: 1px solid var(--clr-border);
-  background: var(--white);
-  cursor: pointer;
-  font-size: var(--btn-fs);
-  line-height: var(--btn-lh);
-  font-weight: var(--btn-fw);
+.chip {
+  font: var(--body2);
+  color: var(--gray);
+  position: relative;
 }
-.btn:hover {
-  border-color: var(--button);
-}
-
-.fav {
-  margin-left: auto;
-  width: 40px;
-  height: 40px;
-  justify-content: center;
-}
-
-.icon {
-  width: 20px;
-  height: 20px;
-  display: block;
-}
-
-/* активный избранный — красим SVG через CSS-переменную из спрайта */
-.favActive .icon {
-  --color1: var(--button);
-}
-
-/* Card.module.css (пример) */
-.favBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--badges);
-  border: 1px solid var(--gray-light);
-  color: var(--gray); /* НЕ сам fill, а цвет текста — будет прокинут в svg */
-  cursor: pointer;
-}
-
-.favBtnActive {
-  color: #e02424;
-}
-
-.favIcon {
-  width: 20px;
-  height: 20px;
-  /* ключевое: задаём переменную, которую читает символ внутри спрайта */
-  --color1: currentColor;
+/* точка-разделитель между элементами одной строки */
+.row .chip + .chip::before {
+  content: "";
+  position: absolute;
+  left: -7px;
 }

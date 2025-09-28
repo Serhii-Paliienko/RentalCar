@@ -71,7 +71,7 @@ export default function Filters({ initial, onSubmit }: Props) {
                 <label className={s.label} htmlFor="brand">
                   Car brand
                 </label>
-                <div className={s.control}>
+                <div className={s.selectBox}>
                   <Field name="brand">
                     {({ field }: FieldProps<string>) => (
                       <Select {...field} id="brand" ariaLabel="Car brand">
@@ -92,7 +92,7 @@ export default function Filters({ initial, onSubmit }: Props) {
                 <label className={s.label} htmlFor="rentalPrice">
                   Price / hour
                 </label>
-                <div className={s.control}>
+                <div className={s.selectBox}>
                   <Field name="rentalPrice">
                     {({ field }: FieldProps<string>) => (
                       <Select

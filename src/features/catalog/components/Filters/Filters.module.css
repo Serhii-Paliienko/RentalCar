@@ -1,10 +1,15 @@
 /* src/features/catalog/components/Filters/Filters.module.css */
 
-/* Блок фильтров: не добавляем верхний отступ — его даёт header (margin-bottom) */
+/* ВЕРТИКАЛЬ:
+   — отступ сверху как в Figma, но минус нижний геп хедера.
+   В хедере уже есть CSS-переменная --header-gap: 4px (см. devtools).
+*/
 .wrap {
   width: 100%;
-  margin-top: 0; /* учитываем margin-bottom у Header */
-  margin-bottom: 32px; /* зазор до карточек по макету */
+  margin-top: calc(
+    64px - var(--header-gap, 4px)
+  ); /* вернуть margin-top и учесть mb header */
+  margin-bottom: 32px; /* до карточек */
 }
 
 .form {
@@ -13,7 +18,7 @@
 
 /* Сетка по Figma:
    196 | 196 | 320 | 156, gap 16
-   Контентная ширина: 916px — центрируем .row
+   Контентная ширина = 916px. Центрируем .row.
 */
 .row {
   display: grid;
@@ -21,10 +26,10 @@
   gap: 16px;
   align-items: end;
   max-width: 916px;
-  margin-inline: auto; /* центрирование */
+  margin-inline: auto;
 }
 
-/* подпись + контрол */
+/* подпись + контрол снизу */
 .group {
   display: grid;
   gap: 8px;
@@ -36,35 +41,90 @@
   color: var(--gray, #8e929a);
 }
 
-/* Контрол: ЖЁСТКАЯ высота 44px, без var() и глобалок */
-.control {
+/* =========================
+   SELECT (кастомный)
+   Стилизуем внутренний label.root и меню.
+   Высота — ровно 44px по макету.
+   ========================= */
+.selectBox {
+  position: relative;
+}
+
+/* сам кликабельный элемент Select — внутри рендерится как <label class="root..."> */
+.selectBox :global(label[class*="root"]) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+  width: 100%;
   height: 44px;
+
   background: var(--inputs, #f5f6fb);
   border: 1px solid var(--gray-200, #e6e8ef);
   border-radius: 12px;
-  display: grid;
-  align-items: center;
-  padding-inline: 14px; /* отступы как на скрине */
+
+  padding-inline: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* состояние открытия/фокуса — лёгкий обвод */
+.selectBox :global(label[class*="root"][data-open="true"]),
+.selectBox :global(label[class*="root"]:focus-visible) {
+  outline: 2px solid rgba(58, 106, 255, 0.25);
+  outline-offset: 0;
+}
+
+/* текст и иконка внутри label.root */
+.selectBox :global(label[class*="root"] > span) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selectBox :global(label[class*="root"] svg) {
+  width: 16px;
+  height: 16px;
+  color: var(--main, #121417); /* чтоб chevron был виден */
+  stroke: currentColor;
+  flex: 0 0 auto;
+}
+
+/* выпадающее меню (listbox) */
+.selectBox :global([role="listbox"]) {
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  right: auto;
+  top: calc(100% + 8px);
+
+  min-width: 100%;
+  max-height: 320px;
+  overflow: auto;
+
+  background: #fff;
+  border: 1px solid var(--gray-200, #e6e8ef);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(18, 20, 23, 0.08);
+  padding: 8px 0;
   box-sizing: border-box;
 }
 
-/* Сброс нативных стилей внутри .control (поверх глобальных) */
-.control select,
-.control input {
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  border: 0;
-  outline: none;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  line-height: normal;
-  color: var(--main, #121417);
-  box-sizing: border-box;
+.selectBox :global([role="option"]),
+.selectBox :global(li) {
+  padding: 8px 14px;
+  line-height: 1.2;
+  cursor: pointer;
 }
 
-/* Mileage split (From | To) — тоже 44px */
+.selectBox :global([aria-selected="true"]) {
+  background: #f0f2f8;
+}
+
+/* =========================
+   MILEAGE (From | To) — 44px
+   ========================= */
 .mileage {
   display: grid;
   gap: 8px;
@@ -92,7 +152,19 @@
   border-left: 1px solid var(--gray-200, #e6e8ef);
 }
 
-/* Кнопка в своей колонке тянется на всю ширину (156px); её базовая высота = 44px из общего Button */
+.part :global(input) {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: var(--main, #121417);
+}
+
+/* Кнопка */
 .searchBtn {
   width: 100%;
 }
@@ -104,7 +176,6 @@
     max-width: 100%;
   }
 }
-
 @media (max-width: 860px) {
   .row {
     grid-template-columns: 1fr;
