@@ -17,7 +17,6 @@ export default function CatalogPage() {
   const { instantFromCache, placeholderCap } = readCatalogSettings(loc.search);
 
   const {
-    // data — не используем, поэтому не деструктурируем
     cars,
     hasNextPage,
     fetchNextPage,
@@ -51,7 +50,6 @@ export default function CatalogPage() {
 
   return (
     <main className="container">
-      {/* SEO: h1 нужен роботам; визуально скрыт утилитой из globals.css */}
       <h1 className="visually-hidden">Catalog</h1>
 
       <Filters

@@ -1,4 +1,3 @@
-// src/features/catalog/components/Filters/Filters.tsx
 import { Formik, Form, Field } from "formik";
 import type { FieldProps } from "formik";
 import { useQuery } from "@tanstack/react-query";

@@ -32,7 +32,6 @@
   align-items: center;
 }
 
-/* никаких .button/.input тут нет */
 .error {
   color: #e5484d;
   font-size: var(--body2-fs);

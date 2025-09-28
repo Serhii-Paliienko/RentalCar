@@ -5,14 +5,13 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* под макет 3 в ряд */
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--sp-6, 24px);
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* начальная загрузка: скелет */
 .skeleton {
   height: 280px;
   border: 1px solid var(--clr-border, #e6e8ef);
@@ -30,14 +29,12 @@
   }
 }
 
-/* состояния */
 .state {
   padding: 24px;
   text-align: center;
   color: var(--gray, #8e929a);
 }
 
-/* компактные алерты (ошибка/предупреждение) */
 .alert {
   display: grid;
   grid-auto-flow: column;
@@ -74,7 +71,6 @@
   pointer-events: none;
 }
 
-/* load more */
 .more {
   display: flex;
   justify-content: center;
@@ -95,7 +91,6 @@
   pointer-events: none;
 }
 
-/* мини-спиннер без инлайнов */
 .spinner {
   width: 16px;
   height: 16px;
@@ -109,8 +104,6 @@
     transform: rotate(360deg);
   }
 }
-
-/* адаптив грид */
 
 @media (min-width: 1440px) {
   .grid {

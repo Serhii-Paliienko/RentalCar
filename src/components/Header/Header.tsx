@@ -3,13 +3,9 @@ import { useLayoutEffect, useRef } from "react";
 import StyleSwitcher from "@components/StyleSwitcher/StyleSwitcher";
 import s from "./Header.module.css";
 
-/** Фича-флаг: переключатель тем по умолчанию скрыт */
+/** Переключатель тем по умолчанию скрыт */
 const THEMES_ENABLED = import.meta.env.VITE_FEATURE_THEMES === "on";
 
-/**
- * Считаем реальную вертикальную «занятость» хедера:
- *   высота коробки + внешний margin-bottom => --header-total
- */
 export default function Header() {
   const headerRef = useRef<HTMLElement | null>(null);
 

@@ -1,19 +1,13 @@
-/* src/features/catalog/components/Filters/Filters.module.css */
-
-/* ВЕРХ/НИЗ: учитываем mb у Header (4px) и держим блок по центру */
 .wrap {
   width: 100%;
-  /* по макету ~64px от шапки, вычитаем хедерный gap */
   margin-top: calc(var(--filters-top, 64px) - var(--header-gap, 4px));
-  margin-bottom: 32px; /* до карточек */
+  margin-bottom: 32px;
 }
 
 .form {
   width: 100%;
 }
 
-/* Сетка Figma:
-   196 | 196 | 320 | 156; gap 16; контентная ширина 916px — центрирование */
 .row {
   display: grid;
   grid-template-columns: 196px 196px 320px 156px;
@@ -23,7 +17,6 @@
   margin-inline: auto;
 }
 
-/* подпись + контрол */
 .group {
   display: grid;
   gap: 8px;
@@ -35,37 +28,27 @@
   color: var(--gray, #8e929a);
 }
 
-/* =========================
-   SELECT (триггер = label.root)
-   ========================= */
 .selectBox {
   position: relative;
 }
 
-/* Кликабельный элемент селекта */
 .selectBox :global(label[class*="root"]) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   box-sizing: border-box;
   width: 100%;
-  height: 44px; /* фикс как в макете */
-
+  height: 44px;
   background: var(--inputs, #f5f6fb);
   border: 1px solid var(--gray-200, #e6e8ef);
   border-radius: 12px;
-
   padding-inline: 14px;
   cursor: pointer;
   user-select: none;
-
-  /* убираем синее выделение/аутлайн */
   outline: none;
   box-shadow: none;
 }
 
-/* также гасим аутлайн в состояниях фокуса/клика/открытия */
 .selectBox :global(label[class*="root"]:focus),
 .selectBox :global(label[class*="root"]:focus-visible),
 .selectBox :global(label[class*="root"][data-open="true"]) {
@@ -74,14 +57,12 @@
   border-color: var(--gray-200, #e6e8ef);
 }
 
-/* текст и иконка внутри */
 .selectBox :global(label[class*="root"] > span) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* chevron: видимый, вращается при открытии */
 .selectBox :global(label[class*="root"] svg) {
   width: 16px;
   height: 16px;
@@ -95,17 +76,14 @@
   transform: rotate(180deg);
 }
 
-/* =========================
-   DROPDOWN
-   ========================= */
 .selectBox :global([role="listbox"]) {
   position: absolute;
   z-index: 30;
   left: 0;
   top: calc(100% + 8px);
 
-  min-width: 100%; /* не меньше триггера */
-  max-height: 260px; /* как в макете */
+  min-width: 100%;
+  max-height: 260px;
   overflow: auto;
 
   background: #fff;
@@ -116,7 +94,6 @@
   box-sizing: border-box;
 }
 
-/* пункты меню */
 .selectBox :global([role="option"]),
 .selectBox :global(li) {
   padding: 8px 14px;
@@ -132,7 +109,6 @@
   background: #eef1f8;
 }
 
-/* Скролл уже стилизован, но на всякий случай добавим базовый вид */
 .selectBox :global([role="listbox"]::-webkit-scrollbar) {
   width: 6px;
 }
@@ -144,9 +120,6 @@
   background: transparent;
 }
 
-/* =========================
-   MILEAGE (From | To) — 44px
-   ========================= */
 .mileage {
   display: grid;
   gap: 8px;
@@ -156,7 +129,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
-  height: 44px; /* фикс */
+  height: 44px;
   background: var(--inputs, #f5f6fb);
   border: 1px solid var(--gray-200, #e6e8ef);
   border-radius: 12px;
@@ -174,7 +147,6 @@
   border-left: 1px solid var(--gray-200, #e6e8ef);
 }
 
-/* инпуты внутри */
 .part :global(input) {
   width: 100%;
   height: 100%;
@@ -184,28 +156,24 @@
   padding: 0;
   margin: 0;
   font: inherit;
-  color: var(--main, #121417); /* цвет текста */
+  color: var(--main, #121417);
   box-sizing: border-box;
 }
 
-/* плейсхолдер светлее (как на макете) */
 .part :global(input::placeholder) {
-  color: var(--gray, #8e929a);
+  color: var(--main);
 }
 
-/* гасим стандартный blue outline */
 .part :global(input:focus),
 .part :global(input:focus-visible) {
   outline: none !important;
   box-shadow: none !important;
 }
 
-/* Кнопка поиска тянется на ширину своей колонки (156px) */
 .searchBtn {
   width: 100%;
 }
 
-/* Респонсив */
 @media (max-width: 1100px) {
   .row {
     grid-template-columns: 1fr 1fr 1.2fr 156px;

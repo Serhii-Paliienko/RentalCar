@@ -1,4 +1,3 @@
-// src/features/catalog/hooks/useCarsInfinite.ts
 import { useEffect, useMemo } from "react";
 import {
   useInfiniteQuery,
@@ -42,7 +41,6 @@ function placeholderFromCache(
   keyPrefix: readonly unknown[],
   cap: number
 ): InfiniteData<CarsResponseRaw, unknown> | undefined {
-  // Находим последнее совпадение по ключу ["cars", ...]
   const entries = client
     .getQueriesData<InfiniteData<CarsResponseRaw>>({
       predicate: (q) =>
@@ -53,7 +51,6 @@ function placeholderFromCache(
 
   if (!entries.length) return undefined;
 
-  // Берём последнюю (самую свежую) и обрезаем по cap
   const last = entries[entries.length - 1];
   const cars = flatCars(last).slice(0, cap);
   const pageSize = Math.max(1, last.pages[0]?.cars?.length ?? 12);
@@ -70,7 +67,6 @@ function placeholderFromCache(
   return { pages, pageParams: pages.map((p) => p.page) };
 }
 
-/** Инфинит-кверя с серверной пагинацией и пост-строгой ценой */
 export function useCarsInfinite(
   filters: FiltersInput,
   opts?: { limit?: string; instantFromCache?: boolean; placeholderCap?: number }
@@ -113,7 +109,6 @@ export function useCarsInfinite(
 
   const cars = useMemo(() => flatCars(q.data), [q.data]);
 
-  // Догружаем страницы при активных фильтрах, пока не набрали limit или не кончились страницы
   useEffect(() => {
     const pageSize = Number(limit) || 12;
     if (!hasAnyFilter) return;

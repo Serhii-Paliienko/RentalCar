@@ -3,12 +3,9 @@ import type { SelectHTMLAttributes, FocusEvent, MouseEvent } from "react";
 import s from "./Select.module.css";
 
 type Props = SelectHTMLAttributes<HTMLSelectElement> & {
-  /** подпись для скринридера; визуальную подпись рендерим в Filters */
   ariaLabel?: string;
-  /** id иконки «закрыт» в public/sprite.svg */
-  iconClosedId?: string; // по макету — стрелка вниз
-  /** id иконки «открыт» в public/sprite.svg */
-  iconOpenId?: string; // по макету — стрелка вверх/close
+  iconClosedId?: string;
+  iconOpenId?: string;
 };
 
 export default function Select({

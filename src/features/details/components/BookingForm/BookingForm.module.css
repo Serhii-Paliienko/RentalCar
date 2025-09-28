@@ -7,11 +7,8 @@
   gap: 6px;
 }
 
-/* ошибки от ErrorText */
 .error {
   color: var(--error, #e5484d);
   font-size: var(--body2-fs);
   line-height: var(--body2-lh);
 }
-
-/* важно: НИКАКИХ .input / .button здесь нет */

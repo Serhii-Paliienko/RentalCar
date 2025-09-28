@@ -4,8 +4,8 @@ import s from "./Hero.module.css";
 
 const HERO_SLIDES: Array<{
   id: string;
-  base1440: string; // путь без расширения
-  base2880: string; // путь без расширения
+  base1440: string;
+  base2880: string;
   alt?: string;
 }> = [
   {
@@ -14,8 +14,6 @@ const HERO_SLIDES: Array<{
     base2880: "/images/hero/hero-2880",
     alt: "",
   },
-  // Добавите новые кадры — просто раскомментируйте/добавьте:
-  // { id: "slide-2", base1440: "/images/hero/hero-02-1440", base2880: "/images/hero/hero-02-2880" },
 ];
 
 const AUTOPLAY_MS = 5000;

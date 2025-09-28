@@ -10,7 +10,7 @@
   --button-hover: #0b44cd;
   --error: #e5484d;
 
-  /* Typography — семейство */
+  /* Typography */
   --font-family: "Manrope", system-ui, -apple-system, Segoe UI, Roboto, Arial,
     "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
     sans-serif;
@@ -35,7 +35,6 @@
   --btn-lh: 20px;
   --btn-fw: 600;
 
-  /* Сокращённые шорткаты для удобства (легально использовать в CSS: font: var(--h1)) */
   --h1: 700 60px/72px var(--font-family);
   --h2: 600 24px/32px var(--font-family);
   --h3: 600 20px/24px var(--font-family);
@@ -44,8 +43,8 @@
   --btn: 600 16px/20px var(--font-family);
 
   /* Layout */
-  --container-w: 1440px; /* прежний токен */
-  --container-max: var(--container-w); /* алиас — чтобы оба варианта работали */
+  --container-w: 1440px;
+  --container-max: var(--container-w);
   --container-x: 120px;
   --header-h: 68px;
 
@@ -59,14 +58,11 @@
   --focus-ring: 0 0 0 3px rgba(52, 112, 255, 0.35);
 
   /* Hero */
-  --hero-img: url("/images/hero/hero-1440.jpg"); /* дефолтный фон, если используешь через CSS */
+  --hero-img: url("/images/hero/hero-1440.jpg");
 }
 
 /* === Focus ring tokens (brand) === */
 :root {
-  /* Подбери под свой бренд-палитру; это пример */
   --brand-500: #2d7aff;
-
-  /* Двухслойная рамка: «светлая прокладка» + внешний цвет — видна на любых фонах */
   --focus-ring: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 0 4px var(--brand-500);
 }

@@ -25,7 +25,7 @@
   background: var(--inputs-hover, #eef1f7);
 }
 .root:focus-within {
-  outline: auto; /* нативный фокус */
+  outline: auto;
   box-shadow: none;
   border-color: var(--button, #3470ff);
 }

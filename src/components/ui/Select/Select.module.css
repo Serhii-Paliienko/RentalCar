@@ -35,12 +35,10 @@
   cursor: inherit;
 }
 
-/* Placeholder (первая option со value="") должен быть серым как в Input */
 .control:has(option:checked[value=""]) {
-  color: var(--gray, #8e929a);
+  color: var(--main);
 }
 
-/* Блок Chevron справа */
 .chevron {
   display: inline-grid;
   place-items: center;
@@ -52,7 +50,6 @@
   line-height: 1;
 }
 
-/* По умолчанию показываем закрытую стрелку; когда селект в фокусе — открытую */
 .root .iconOpen {
   display: none;
 }
@@ -63,17 +60,14 @@
   display: inline;
 }
 
-/* Фолбэк на случай отсутствия спрайта */
 .root .fallback {
   display: none;
 }
 
-/* Ховеры */
 .root:hover {
   background: var(--inputs-hover, #eef1f7);
 }
 
-/* УБИРАЕМ СИНЮЮ АУРУ: ни outline, ни box-shadow, ни смены цвета бордера */
 .root:focus-within {
   outline: none !important;
   box-shadow: none !important;

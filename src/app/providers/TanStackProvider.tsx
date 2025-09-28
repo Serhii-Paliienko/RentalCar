@@ -16,7 +16,6 @@ const client = new QueryClient({
 
 type Props = { children: ReactNode };
 
-/** React Query provider (именованный экспорт) */
 export function TanStackProvider({ children }: Props) {
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }

@@ -37,13 +37,11 @@
   color: var(--button);
 }
 
-/* Нативная клавиатурная обводка, без кастомных ring’ов */
 .link:focus-visible {
   outline: auto;
   color: var(--button);
 }
 
-/* Активный пункт меню */
 .active {
   color: var(--button);
 }

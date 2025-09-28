@@ -5,7 +5,6 @@ export default function EmptyState({ onReset }: { onReset: () => void }) {
     <div className="empty">
       <p>Nothing found</p>
       <Button onClick={onReset}>Try again</Button>
-      {/* или: <Button variant="secondary" onClick={onReset}>Try again</Button> */}
     </div>
   );
 }

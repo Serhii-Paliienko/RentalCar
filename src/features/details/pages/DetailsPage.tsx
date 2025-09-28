@@ -60,7 +60,6 @@ export default function DetailsPage({ carId }: Props) {
             alt={`${car.brand} ${car.model}`}
             loading="eager"
           />
-          {/* спеки/описание */}
         </div>
         <div className={s.right}>
           <BookingForm />

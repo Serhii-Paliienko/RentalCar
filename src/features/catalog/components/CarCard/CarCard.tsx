@@ -18,8 +18,6 @@ function splitAddress(address: string): { city?: string; country?: string } {
 
 export default function CarCard({ car }: { car: Car }) {
   const navigate = useNavigate();
-
-  // Подписка на примитив → мгновенный ререндер сердца
   const isFav = useFavorites((st) => st.ids.includes(car.id));
   const toggle = useFavorites((st) => st.toggle);
 
@@ -35,7 +33,6 @@ export default function CarCard({ car }: { car: Car }) {
           loading="lazy"
         />
 
-        {/* Heart overlay: базовые цвета из твоего CSS, актив — через filled-символ */}
         <button
           type="button"
           className={isFav ? `${s.favBtn} ${s.favBtnActive}` : s.favBtn}
@@ -74,7 +71,6 @@ export default function CarCard({ car }: { car: Car }) {
         </div>
       </div>
       <div className={s.actions}>
-        {/* Кнопка из элементов; ширину добираем через className */}
         <Button
           className={s.btnFull}
           onClick={() => navigate(`/catalog/${car.id}`)}

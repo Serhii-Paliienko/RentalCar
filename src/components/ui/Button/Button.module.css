@@ -42,8 +42,8 @@
 
 .root:focus-visible {
   background: var(--button-hover);
-  outline: auto; /* нативный фокус */
-  box-shadow: none; /* кастомные ring-и не используем */
+  outline: auto;
+  box-shadow: none;
 }
 
 .fullWidth {

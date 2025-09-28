@@ -1,5 +1,5 @@
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup"; // важно: 'yup', не 'Yup'
+import * as Yup from "yup";
 import Button from "@components/ui/Button";
 import Input from "@components/ui/Input";
 import ErrorText from "@components/forms/ErrorText";
@@ -21,7 +21,6 @@ const Schema = Yup.object({
 
 export default function BookingForm() {
   const handleSubmit = (values: Values) => {
-    // TODO: заменить на реальный сабмит + нотификацию
     console.log("booking submit", values);
   };
 

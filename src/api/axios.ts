@@ -1,4 +1,3 @@
-// src/api/axios.ts
 import axios from "axios";
 import type { NormalizedError } from "./types";
 
