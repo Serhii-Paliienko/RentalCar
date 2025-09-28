@@ -10,8 +10,8 @@ const HERO_SLIDES: Array<{
 }> = [
   {
     id: "slide-1",
-    base1440: "/images/hero/hero-1440",
-    base2880: "/images/hero/hero-2880",
+    base1440: "/public/hero-1440",
+    base2880: "/public/hero-2880",
     alt: "",
   },
 ];
