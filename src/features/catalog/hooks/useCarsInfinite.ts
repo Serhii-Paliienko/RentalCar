@@ -14,124 +14,137 @@ type BaseRQ = UseInfiniteQueryResult<
   InfiniteData<CarsResponseRaw, unknown>,
   Error
 >;
-export type UseCarsInfiniteResult = BaseRQ & {
+
+type Options = {
+  limit: string;
+  instantFromCache?: boolean;
+  placeholderCap?: number;
+};
+
+type Return = BaseRQ & {
   cars: Car[];
   hasAnyFilter: boolean;
   isEmptyAfterAllPages: boolean;
   isUpdatingInBackground: boolean;
 };
 
-function flatCars(data: InfiniteData<CarsResponseRaw, unknown> | undefined) {
-  if (!data) return [] as Car[];
+function dedupById(list: Car[]): Car[] {
   const seen = new Set<string>();
   const out: Car[] = [];
-  for (const page of data.pages) {
-    for (const car of page.cars) {
-      if (!seen.has(car.id)) {
-        seen.add(car.id);
-        out.push(car);
-      }
+  for (const c of list) {
+    if (!seen.has(c.id)) {
+      seen.add(c.id);
+      out.push(c);
     }
   }
   return out;
 }
 
-function placeholderFromCache(
-  client: ReturnType<typeof useQueryClient>,
-  keyPrefix: readonly unknown[],
-  cap: number
-): InfiniteData<CarsResponseRaw, unknown> | undefined {
-  const entries = client
-    .getQueriesData<InfiniteData<CarsResponseRaw>>({
-      predicate: (q) =>
-        Array.isArray(q.queryKey) && q.queryKey[0] === keyPrefix[0],
-    })
-    .map(([, data]) => data)
-    .filter(Boolean) as InfiniteData<CarsResponseRaw, unknown>[];
-
-  if (!entries.length) return undefined;
-
-  const last = entries[entries.length - 1];
-  const cars = flatCars(last).slice(0, cap);
-  const pageSize = Math.max(1, last.pages[0]?.cars?.length ?? 12);
-  const pages: CarsResponseRaw[] = [];
-  for (let i = 0; i < Math.ceil(cars.length / pageSize); i++) {
-    const slice = cars.slice(i * pageSize, (i + 1) * pageSize);
-    pages.push({
-      cars: slice,
-      page: i + 1,
-      totalPages: last.pages[last.pages.length - 1]?.totalPages ?? 1,
-      totalCars: last.pages[last.pages.length - 1]?.totalCars ?? slice.length,
-    });
-  }
-  return { pages, pageParams: pages.map((p) => p.page) };
-}
-
 export function useCarsInfinite(
   filters: FiltersInput,
-  opts?: { limit?: string; instantFromCache?: boolean; placeholderCap?: number }
-): UseCarsInfiniteResult {
-  const limit = opts?.limit ?? "12";
-  const effFilters: FiltersInput = {
-    brand: filters.brand || "",
-    rentalPrice: filters.rentalPrice || "",
-    minMileage: filters.minMileage || "",
-    maxMileage: filters.maxMileage || "",
-  };
-  const hasAnyFilter = !!(
-    effFilters.brand ||
-    effFilters.rentalPrice ||
-    effFilters.minMileage ||
-    effFilters.maxMileage
-  );
+  { limit, instantFromCache = true, placeholderCap = 200 }: Options
+): Return {
+  const qc = useQueryClient();
 
-  const client = useQueryClient();
+  const hasAnyFilter =
+    !!filters.brand ||
+    !!filters.rentalPrice ||
+    !!filters.minMileage ||
+    !!filters.maxMileage;
 
-  const queryKey = ["cars", effFilters, limit] as const;
+  const placeholderData: InfiniteData<CarsResponseRaw> | undefined =
+    instantFromCache
+      ? (() => {
+          const cached = qc.getQueryData<
+            InfiniteData<CarsResponseRaw, unknown>
+          >(["cars", filters, limit]);
+          if (cached) return cached;
+          const any = qc.getQueriesData<InfiniteData<CarsResponseRaw>>({
+            queryKey: ["cars"],
+          });
+          const flat = any.flatMap(([, d]) =>
+            d ? d.pages.flatMap((p) => p.cars) : []
+          );
+          if (flat.length === 0) return undefined;
+          const cap = Math.max(0, Math.min(placeholderCap, flat.length));
+          const capped = flat.slice(0, cap);
+          return {
+            pageParams: [1],
+            pages: [
+              {
+                cars: capped,
+                totalCars: capped.length,
+                page: 1,
+                totalPages: 1,
+              },
+            ],
+          };
+        })()
+      : undefined;
 
   const q = useInfiniteQuery({
-    queryKey,
+    queryKey: ["cars", filters, limit],
     initialPageParam: 1,
+    placeholderData,
     queryFn: async ({ pageParam }) => {
-      const page = String(pageParam ?? 1);
-      return getCars({ ...effFilters, limit, page });
+      const page =
+        typeof pageParam === "number" ? pageParam : Number(pageParam || 1);
+      return getCars({
+        ...filters,
+        limit,
+        page: String(page),
+      });
     },
-    getNextPageParam: (last) => {
-      return last.page < last.totalPages ? last.page + 1 : undefined;
+    getNextPageParam: (lastPage) => {
+      const page = Number(lastPage?.page ?? 1);
+      const totalPages = Number(lastPage?.totalPages ?? 1);
+      return page < totalPages ? page + 1 : undefined;
     },
-    placeholderData: opts?.instantFromCache
-      ? () =>
-          placeholderFromCache(client, queryKey, opts?.placeholderCap ?? 200)
-      : undefined,
-    refetchOnWindowFocus: false,
+    refetchOnMount: false,
     refetchOnReconnect: false,
-  });
+    refetchOnWindowFocus: false,
+    retry: 1,
+    staleTime: 60_000,
+    gcTime: 600_000,
+  }) as BaseRQ;
 
-  const cars = useMemo(() => flatCars(q.data), [q.data]);
+  const cars = useMemo(() => {
+    const list = q.data?.pages.flatMap((p) => p.cars ?? []) ?? [];
+    return dedupById(list);
+  }, [q.data]);
+
+  const desiredMinCount = Number(limit) || 0;
 
   useEffect(() => {
-    const pageSize = Number(limit) || 12;
     if (!hasAnyFilter) return;
-    if (q.isFetching || q.isFetchingNextPage) return;
     if (!q.hasNextPage) return;
-    if (cars.length >= pageSize) return;
+    if (q.isFetchingNextPage) return;
+    if (cars.length >= desiredMinCount) return;
     q.fetchNextPage();
   }, [
     hasAnyFilter,
-    q.isFetching,
-    q.isFetchingNextPage,
     q.hasNextPage,
+    q.isFetchingNextPage,
+    q.fetchNextPage,
     cars.length,
-    limit,
+    desiredMinCount,
   ]);
 
-  const isEmptyAfterAllPages = q.status === "success" && cars.length === 0;
-  const isUpdatingInBackground = q.isFetching && !q.isLoading;
+  const isEmptyAfterAllPages = Boolean(
+    q.status === "success" &&
+      cars.length === 0 &&
+      (q.data?.pages?.length ?? 0) > 0 &&
+      !q.hasNextPage
+  );
 
-  return Object.assign(q, {
+  const isUpdatingInBackground = q.isFetching && !q.isLoading;
+  const merged: Return = {
+    ...q,
     cars,
     hasAnyFilter,
     isEmptyAfterAllPages,
     isUpdatingInBackground,
-  });
+  };
+
+  return merged;
 }
