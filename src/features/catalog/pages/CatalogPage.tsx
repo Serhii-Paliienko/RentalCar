@@ -50,51 +50,53 @@ export default function CatalogPage() {
   };
 
   return (
-    <main className="container">
-      <h1 className="visually-hidden">Catalog</h1>
+    <div className={s.page}>
+      <main className="container">
+        <h1 className="visually-hidden">Catalog</h1>
 
-      <Filters
-        onSubmit={onSearch}
-        initial={{
-          brand: filters.brand || "",
-          rentalPrice: filters.rentalPrice || "",
-          minMileage: filters.minMileage || "",
-          maxMileage: filters.maxMileage || "",
-        }}
-      />
+        <Filters
+          onSubmit={onSearch}
+          initial={{
+            brand: filters.brand || "",
+            rentalPrice: filters.rentalPrice || "",
+            minMileage: filters.minMileage || "",
+            maxMileage: filters.maxMileage || "",
+          }}
+        />
 
-      {isLoading && (
-        <section className={s.grid} aria-label="Cars grid loading">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className={s.skeleton} aria-hidden />
-          ))}
-        </section>
-      )}
+        {isLoading && (
+          <section className={s.grid} aria-label="Cars grid loading">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className={s.skeleton} aria-hidden />
+            ))}
+          </section>
+        )}
 
-      {!isLoading && cars.length > 0 && (
-        <section className={s.grid} aria-label="Cars grid">
-          {cars.map((car) => (
-            <CarCard key={car.id} car={car} />
-          ))}
-        </section>
-      )}
+        {!isLoading && cars.length > 0 && (
+          <section className={s.grid} aria-label="Cars grid">
+            {cars.map((car) => (
+              <CarCard key={car.id} car={car} />
+            ))}
+          </section>
+        )}
 
-      {hasAnyFilter && isEmptyAfterAllPages && (
-        <div className={s.state}>No cars match your filters.</div>
-      )}
+        {hasAnyFilter && isEmptyAfterAllPages && (
+          <div className={s.state}>No cars match your filters.</div>
+        )}
 
-      {hasNextPage && (
-        <div className={s.more}>
-          <Button
-            className={s.moreBtn}
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            aria-label="Load more cars"
-          >
-            {isFetchingNextPage ? "Loading…" : "Load more"}
-          </Button>
-        </div>
-      )}
-    </main>
+        {hasNextPage && (
+          <div className={s.more}>
+            <Button
+              className={s.moreBtn}
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              aria-label="Load more cars"
+            >
+              {isFetchingNextPage ? "Loading…" : "Load more"}
+            </Button>
+          </div>
+        )}
+      </main>
+    </div>
   );
 }

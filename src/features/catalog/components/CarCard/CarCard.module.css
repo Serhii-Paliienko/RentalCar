@@ -32,6 +32,7 @@
 }
 .favBtnActive {
   color: var(--button);
+  stroke: var(--button);
 }
 .favIcon {
   width: 16px;

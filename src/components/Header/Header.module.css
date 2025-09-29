@@ -26,10 +26,8 @@
 .link {
   font: var(--body);
   color: var(--main);
-
   text-decoration: none;
   cursor: pointer;
-
   transition: color 0.2s ease-in-out;
 }
 

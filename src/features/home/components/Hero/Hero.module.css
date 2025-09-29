@@ -65,7 +65,7 @@
   margin: 0;
 }
 .subtitle {
-  font: var(--h3);
+  font: var(--h2);
   margin: var(--hero-gap-title-subtitle) 0 0;
   opacity: 0.9;
 }

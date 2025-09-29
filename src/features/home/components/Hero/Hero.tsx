@@ -111,9 +111,9 @@ export default function Hero() {
         <div className={s.inner}>
           <div className={s.block}>
             <h1 className={s.title}>Find your perfect rental car</h1>
-            <p className={s.subtitle}>
+            <h2 className={s.subtitle}>
               Reliable and budget-friendly rentals for any journey
-            </p>
+            </h2>
 
             <div className={s.actions}>
               {/* НИЧЕГО в Button не меняем — просто даём атрибут для локальной стилизации CTA */}
