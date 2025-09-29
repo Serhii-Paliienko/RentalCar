@@ -3,7 +3,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCarById } from "@api/cars";
 import type { Car } from "@api/types";
 import BookingForm from "@features/details/components/BookingForm/BookingForm";
-import Specs from "@features/details/components/Specs/Specs";
 import Loader from "@components/feedback/Loader/Loader";
 import ErrorState from "@components/feedback/ErrorState/ErrorState";
 import { formatMileage, formatPriceUsd } from "@utils/format";
