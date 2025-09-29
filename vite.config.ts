@@ -3,5 +3,11 @@ import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [
+    react(),
+    tsconfigPaths({
+      projects: ["tsconfig.app.json", "tsconfig.node.json"],
+      ignoreConfigErrors: true,
+    }),
+  ],
 });

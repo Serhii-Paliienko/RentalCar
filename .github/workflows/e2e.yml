@@ -1,0 +1,41 @@
+
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install E2E deps
+        working-directory: e2e
+        run: |
+          npm ci || npm i
+          npx playwright install --with-deps
+      - name: Start app
+        run: |
+          npm ci || true
+          npm run build || true
+          npm run preview &
+        env:
+          VITE_PREVIEW_PORT: 4173
+      - name: Wait for app
+        run: |
+          npx wait-on -t 60000 http-get://localhost:5173 || npx wait-on -t 60000 http-get://localhost:4173
+      - name: Run tests
+        working-directory: e2e
+        env:
+          E2E_BASE_URL: http://localhost:5173
+        run: |
+          npm test
+  
