@@ -9,6 +9,7 @@ import CarCard from "@features/catalog/components/CarCard/CarCard";
 import Filters from "@features/catalog/components/Filters/Filters";
 import s from "./CatalogPage.module.css";
 import Button from "@components/ui/Button";
+import EmptyState from "@components/feedback/EmptyState/EmptyState";
 
 export default function CatalogPage() {
   const loc = useLocation();
@@ -81,7 +82,9 @@ export default function CatalogPage() {
         )}
 
         {hasAnyFilter && isEmptyAfterAllPages && (
-          <div className={s.state}>No cars match your filters.</div>
+          <div className={s.state}>
+            <EmptyState />
+          </div>
         )}
 
         {hasNextPage && (

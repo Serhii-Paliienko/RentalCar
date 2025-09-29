@@ -1,7 +1,6 @@
 import type { CatalogFilters } from "@api/types";
 import { normalizeIntString, normalizeRange } from "@utils/number";
 
-// только rentalPrice (никакого "price")
 export function parseCatalogFilters(search: string): CatalogFilters {
   const q = new URLSearchParams(search.startsWith("?") ? search : `?${search}`);
 
@@ -14,15 +13,14 @@ export function parseCatalogFilters(search: string): CatalogFilters {
 
   const filters: CatalogFilters = {
     ...(brand ? { brand } : {}),
-    ...(rentalPrice ? { rentalPrice: normalizeIntString(rentalPrice) } : {}),
-    ...(min ? { minMileage: normalizeIntString(min) } : {}),
-    ...(max ? { maxMileage: normalizeIntString(max) } : {}),
+    ...(rentalPrice ? { rentalPrice } : {}),
+    ...(min ? { minMileage: min } : {}),
+    ...(max ? { maxMileage: max } : {}),
   };
 
   return filters;
 }
 
-export type ReadFilters = ReturnType<typeof parseCatalogFilters>;
 export const readFilters = parseCatalogFilters;
 
 export function readCatalogSettings(search: string): {
@@ -30,7 +28,7 @@ export function readCatalogSettings(search: string): {
   placeholderCap: number;
 } {
   const q = new URLSearchParams(search.startsWith("?") ? search : `?${search}`);
-  const instantFromCache = q.get("instant") !== "false";
+  const instantFromCache = q.get("instant") === "true";
   const cap = Number(q.get("cap") || "200");
   return {
     instantFromCache,

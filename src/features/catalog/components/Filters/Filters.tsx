@@ -4,7 +4,7 @@ import type { FieldProps } from "formik";
 import { useQuery } from "@tanstack/react-query";
 import Select from "@components/ui/Select/Select";
 import Button from "@components/ui/Button";
-import Input from "@components/ui/Input";
+import Input from "@features/catalog/components/Input";
 import { getBrands } from "@api/cars";
 import { normalizeIntString } from "@utils/number";
 import s from "./Filters.module.css";

@@ -11,17 +11,12 @@ export function normalizeRange(
   min: string | number | null | undefined,
   max: string | number | null | undefined
 ): { min: string; max: string } {
-  const mi = normalizeIntString(min as any);
-  const ma = normalizeIntString(max as any);
+  const mi = normalizeIntString(min);
+  const ma = normalizeIntString(max);
   if (mi && ma && Number(mi) > Number(ma)) {
     return { min: ma, max: mi };
   }
   return { min: mi, max: ma };
 }
 
-export function formatMileage(n: number): string {
-  const s = Number(n || 0)
-    .toLocaleString("en-US")
-    .replace(/,/g, " ");
-  return `${s} km`;
-}
+export { formatMileage } from "./format";

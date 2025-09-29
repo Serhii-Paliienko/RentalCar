@@ -1,9 +1,10 @@
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Button from "@components/ui/Button";
-import Input from "@components/ui/Input";
+import Input from "@features/catalog/components/Input";
 import Textarea from "@components/ui/Textarea";
 import ErrorText from "@components/forms/ErrorText";
+import { toast } from "react-hot-toast";
 import s from "./BookingForm.module.css";
 
 type Values = {
@@ -30,14 +31,17 @@ export default function BookingForm() {
 
       <Formik<Values>
         initialValues={initialValues}
-        onSubmit={(values, helpers) => {
-          setTimeout(() => {
-            helpers.setSubmitting(false);
-            alert(
-              `Request sent:\nName: ${values.name}\nEmail: ${values.email}\nDate: ${values.date}`
+        onSubmit={(values, { resetForm, setSubmitting }) => {
+          try {
+            toast.success(
+              `Your booking request was sent${
+                values.name ? `, ${values.name}` : ""
+              }!`
             );
-            helpers.resetForm();
-          }, 400);
+            resetForm();
+          } finally {
+            setSubmitting(false);
+          }
         }}
         validateOnBlur
         validateOnChange={false}
