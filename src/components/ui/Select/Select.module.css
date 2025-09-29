@@ -4,20 +4,19 @@
 }
 
 .control {
-  inline-size: 100%;
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   height: var(--control-h, 44px);
-  padding-inline: 16px;
-  border: 1px solid var(--inputs);
   border-radius: 12px;
-  background: var(--inputs, #f5f6fb);
+  background: var(--inputs);
   transition: background-color var(--tr-fast, 0.15s ease),
     color var(--tr-fast, 0.15s ease), border-color var(--tr-fast, 0.15s ease),
     box-shadow var(--tr-fast, 0.15s ease), transform var(--tr-fast, 0.15s ease);
   cursor: pointer;
   outline: none;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .control:disabled {
@@ -28,17 +27,14 @@
 .control:focus {
   outline: none;
 }
-.control:focus-visible {
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--main) 55%, transparent);
-}
 
 .value {
-  font: inherit;
-  color: var(--text, #121417);
+  font: var(--body);
+  display: flex;
 }
 
 .value[data-placeholder="true"] {
-  color: var(--main);
+  color: var(--body);
 }
 
 .icon {
@@ -57,31 +53,17 @@
   box-shadow: 0 4px 36px 0 rgba(0, 0, 0, 0.02);
   max-block-size: 272px;
   overflow-y: auto;
-  padding-block: 8px;
-}
-
-.list {
-  scrollbar-width: thin;
-  scrollbar-color: var(--inputs) transparent;
-}
-.list::-webkit-scrollbar {
-  width: 6px;
-}
-.list::-webkit-scrollbar-thumb {
-  background: var(--inputs);
-  border-radius: 4px;
+  padding: 14px 8px 14px 18px;
+  margin: 0;
 }
 
 .option {
-  padding: 10px 16px;
-  line-height: 1.25;
-  cursor: pointer;
-  user-select: none;
-  color: var(--text, #121417);
+  margin-bottom: 8px;
+  list-style-type: none;
+  font: var(--body);
+  color: var(--gray);
 }
-.option:hover {
-  background: color-mix(in oklab, var(--main) 8%, transparent);
-}
-.optionSelected {
-  font-weight: 600;
+
+.option:active {
+  color: var(--main);
 }

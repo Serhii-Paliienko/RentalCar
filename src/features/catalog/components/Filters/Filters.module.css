@@ -13,116 +13,40 @@
   grid-template-columns: 204px 196px 320px 156px;
   gap: 16px;
   align-items: end;
-  max-width: 916px;
+  max-width: 924px;
   margin-inline: auto;
 }
 
-.group {
+.group,
+.mileage {
   display: grid;
   gap: 8px;
 }
 
 .label {
-  font-size: 12px;
-  line-height: 1.33;
-  color: var(--gray, #8e929a);
+  font-size: var(--body2);
+  font-weight: var(--body2-fw);
+  color: var(--gray);
 }
 
 .selectBox {
   position: relative;
 }
 
-.selectBox :global(label[class*="root"]) {
-  display: flex;
+.selectBox :global(button[class*="control"]) {
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
   height: 44px;
   background: var(--inputs, #f5f6fb);
-  border: 1px solid var(--gray-200, #e6e8ef);
+  border: transparent;
   border-radius: 12px;
-  padding-inline: 14px;
   cursor: pointer;
   user-select: none;
   outline: none;
   box-shadow: none;
-}
-
-.selectBox :global(label[class*="root"]:focus),
-.selectBox :global(label[class*="root"]:focus-visible),
-.selectBox :global(label[class*="root"][data-open="true"]) {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: var(--gray-200, #e6e8ef);
-}
-
-.selectBox :global(label[class*="root"] > span) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.selectBox :global(label[class*="root"] svg) {
-  width: 16px;
-  height: 16px;
-  color: var(--main, #121417);
-  stroke: currentColor;
-  fill: currentColor;
-  transition: transform 0.2s ease;
-  flex: 0 0 auto;
-}
-.selectBox :global(label[class*="root"][data-open="true"] svg) {
-  transform: rotate(180deg);
-}
-
-.selectBox :global([role="listbox"]) {
-  position: absolute;
-  z-index: 30;
-  left: 0;
-  top: calc(100% + 8px);
-
-  min-width: 100%;
-  max-height: 260px;
-  overflow: auto;
-
-  background: #fff;
-  border: 1px solid var(--gray-200, #e6e8ef);
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(18, 20, 23, 0.08);
-  padding: 8px 0;
-  box-sizing: border-box;
-}
-
-.selectBox :global([role="option"]),
-.selectBox :global(li) {
-  padding: 8px 14px;
-  line-height: 1.2;
-  cursor: pointer;
-  color: var(--main, #121417);
-  white-space: nowrap;
-}
-.selectBox :global([role="option"]:hover) {
-  background: #f0f2f8;
-}
-.selectBox :global([aria-selected="true"]) {
-  background: #eef1f8;
-}
-
-.selectBox :global([role="listbox"]::-webkit-scrollbar) {
-  width: 6px;
-}
-.selectBox :global([role="listbox"]::-webkit-scrollbar-thumb) {
-  background: #d5d9e3;
-  border-radius: 6px;
-}
-.selectBox :global([role="listbox"]::-webkit-scrollbar-track) {
-  background: transparent;
-}
-
-.mileage {
-  display: grid;
-  gap: 8px;
 }
 
 .split {
@@ -130,7 +54,7 @@
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
   height: 44px;
-  background: var(--inputs, #f5f6fb);
+  background: var(--inputs);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -138,7 +62,7 @@
 .part {
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 12px 24px;
   box-sizing: border-box;
 }
 
@@ -146,47 +70,11 @@
   border-left: 1px solid var(--gray-200, #e6e8ef);
 }
 
-.part :global(input) {
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  border: 0;
-  outline: none;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  color: var(--main, #121417);
-  box-sizing: border-box;
-}
-
 .part :global(input::placeholder) {
+  font: var(--body);
   color: var(--main);
-}
-
-.part :global(input:focus),
-.part :global(input:focus-visible) {
-  outline: none;
-  box-shadow: none;
 }
 
 .searchBtn {
   width: 100%;
-}
-
-@media (max-width: 1100px) {
-  .row {
-    grid-template-columns: 1fr 1fr 1.2fr 156px;
-    max-width: 100%;
-  }
-}
-@media (max-width: 860px) {
-  .row {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-  }
-  .searchBtn {
-    width: 156px;
-    justify-self: start;
-    margin-top: 8px;
-  }
 }

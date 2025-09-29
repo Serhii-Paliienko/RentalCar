@@ -48,7 +48,7 @@ export default function Filters({ initial, onSubmit }: Props) {
   );
 
   const priceOptions = useMemo(
-    () => PRICE_OPTIONS.map((p) => ({ value: p, label: `$${p}` })),
+    () => PRICE_OPTIONS.map((p) => ({ value: p, label: String(p) })),
     []
   );
 
@@ -77,7 +77,7 @@ export default function Filters({ initial, onSubmit }: Props) {
           <Form className={s.form} role="search" aria-label="Catalog filters">
             <div className={s.row}>
               {/* Brand */}
-              <div className={s.group}>
+              <div className={`${s.group} ${s.brand}`}>
                 <label className={s.label} htmlFor="brand">
                   Car brand
                 </label>
@@ -99,7 +99,7 @@ export default function Filters({ initial, onSubmit }: Props) {
               </div>
 
               {/* Price */}
-              <div className={s.group}>
+              <div className={`${s.group} ${s.price}`}>
                 <label className={s.label} htmlFor="rentalPrice">
                   Price / hour
                 </label>
