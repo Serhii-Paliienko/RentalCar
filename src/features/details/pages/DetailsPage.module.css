@@ -17,19 +17,17 @@
 }
 
 .img {
+  display: block;
   width: 640px;
   height: 512px;
   object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid var(--gray-light);
-  background: var(--white);
-  display: block;
+  border-radius: 12px;
 }
 
 .title {
   margin: 0;
-  font: var(--h3);
   color: var(--main);
+  font: var(--h2);
 }
 
 .subhead {
@@ -56,7 +54,7 @@
 
 .price {
   color: var(--button);
-  font: var(--h4);
+  font: var(--h3);
 }
 
 .description {

@@ -16,23 +16,31 @@ type Values = {
 const initialValues: Values = { name: "", email: "", date: "", comment: "" };
 
 const Schema = Yup.object({
-  name: Yup.string().trim().required("Name is required"),
-  email: Yup.string().email().required("Email is required"),
-  date: Yup.string().required("Date is required"),
-  comment: Yup.string().max(500, "Max 500 symbols"),
+  name: Yup.string().trim().min(2, "Too short").required("Required"),
+  email: Yup.string().trim().email("Invalid email").required("Required"),
+  date: Yup.string().trim().required("Required"),
+  comment: Yup.string().trim().max(500, "Max 500 chars"),
 });
 
 export default function BookingForm() {
   return (
-    <div className={s.card} aria-labelledby="book-title">
-      <h3 id="book-title" className={s.title}>
-        Book your car now
-      </h3>
+    <div className={s.card}>
+      <h4 className={s.title}>Book your car now</h4>
       <p className={s.hint}>Stay connected! We are always ready to help you.</p>
 
-      <Formik
+      <Formik<Values>
         initialValues={initialValues}
-        onSubmit={(v) => console.log(v)}
+        onSubmit={(values, helpers) => {
+          setTimeout(() => {
+            helpers.setSubmitting(false);
+            alert(
+              `Request sent:\nName: ${values.name}\nEmail: ${values.email}\nDate: ${values.date}`
+            );
+            helpers.resetForm();
+          }, 400);
+        }}
+        validateOnBlur
+        validateOnChange={false}
         validationSchema={Schema}
       >
         <Form className={s.form} noValidate>

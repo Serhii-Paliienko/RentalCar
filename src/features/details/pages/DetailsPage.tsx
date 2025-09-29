@@ -3,6 +3,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCarById } from "@api/cars";
 import type { Car } from "@api/types";
 import BookingForm from "@features/details/components/BookingForm/BookingForm";
+import Specs from "@features/details/components/Specs/Specs";
+import Loader from "@components/Loader/Loader";
+import ErrorState from "@components/ErrorState/ErrorState";
 import { formatMileage, formatPriceUsd } from "@utils/format";
 import s from "./DetailsPage.module.css";
 
@@ -17,78 +20,77 @@ function splitAddress(address: string): { city?: string; country?: string } {
   return { city, country };
 }
 
-type Props = { carId?: string };
-
-export default function DetailsPage({ carId }: Props) {
-  const params = useParams();
-  const id = carId ?? params.id!;
+export default function DetailsPage() {
+  const { id } = useParams<{ id: string }>();
   const qc = useQueryClient();
-
   const placeholder = qc
     .getQueriesData({ queryKey: ["cars"] })
     .flatMap(([, data]) => {
       const pages = (data as any)?.pages;
-      if (Array.isArray(pages)) {
+      if (Array.isArray(pages))
         return pages.flatMap((p: any) => p?.items ?? p?.cars ?? []);
-      }
       return Array.isArray((data as any)?.items) ? (data as any).items : [];
     })
     .find((c: any) => c?.id === id) as Car | undefined;
 
   const carQ = useQuery({
     queryKey: ["car", id],
-    queryFn: () => getCarById(id),
-    enabled: Boolean(id),
+    queryFn: () => getCarById(id!),
+    enabled: !!id,
     placeholderData: placeholder,
   });
 
   if (!id) {
     return (
-      <main className="container">
-        <p>Car id is missing</p>
+      <main className="container" role="main">
+        <ErrorState />
       </main>
     );
   }
 
   if (carQ.isLoading && !carQ.data) {
     return (
-      <main className="container">
-        <p>Loading...</p>
+      <main className="container" role="main">
+        <Loader />
       </main>
     );
   }
 
-  if (carQ.isError) {
+  if (carQ.isError || !carQ.data) {
     return (
-      <main className="container">
-        <p>Failed to load car.</p>
+      <main className="container" role="main">
+        <ErrorState />
       </main>
     );
   }
 
-  const car = carQ.data!;
+  const car = carQ.data;
   const { city, country } = splitAddress(car.address);
 
   return (
-    <main className="container">
-      <div className={s.grid}>
+    <main className="container" role="main">
+      <div className={s.grid} data-gap="24">
+        {/* LEFT */}
         <div className={s.left}>
           <img
             className={s.img}
             src={car.img}
             alt={`${car.brand} ${car.model}`}
+            width={640}
+            height={512}
             loading="eager"
           />
 
           <BookingForm />
         </div>
 
+        {/* RIGHT */}
         <div className={s.right}>
           <h1 className={s.title}>
             {car.brand} {car.model}, {car.year}
           </h1>
 
-          <div className={s.subhead} aria-label="Meta">
+          <div className={s.subhead}>
             {city && (
               <span className={s.metaItem}>
                 <svg className={s.metaIcon} aria-hidden focusable="false">
@@ -97,17 +99,15 @@ export default function DetailsPage({ carId }: Props) {
                 {city}
               </span>
             )}
-            {country && (
-              <span className={s.metaItem}>
-                <span>{country}</span>
-              </span>
-            )}
+            {country && <span className={s.metaItem}>{country}</span>}
+
             <span className={s.metaItem}>
               <svg className={s.metaIcon} aria-hidden focusable="false">
                 <use href="/sprite.svg#car" />
               </svg>
               {formatMileage(car.mileage)}
             </span>
+
             <span className={s.metaItem}>id: {car.id}</span>
           </div>
 
@@ -123,24 +123,14 @@ export default function DetailsPage({ carId }: Props) {
               Rental Conditions:
             </h3>
             <ul className={s.list}>
-              <li className={s.listItem}>
-                <svg className={s.bullet} aria-hidden focusable="false">
-                  <use href="/sprite.svg#check-circle" />
-                </svg>
-                Minimum age: 25
-              </li>
-              <li className={s.listItem}>
-                <svg className={s.bullet} aria-hidden focusable="false">
-                  <use href="/sprite.svg#check-circle" />
-                </svg>
-                Security deposit required
-              </li>
-              <li className={s.listItem}>
-                <svg className={s.bullet} aria-hidden focusable="false">
-                  <use href="/sprite.svg#check-circle" />
-                </svg>
-                Valid driver's license
-              </li>
+              {(car.rentalConditions ?? []).map((cond) => (
+                <li key={cond} className={s.listItem}>
+                  <svg className={s.bullet} aria-hidden focusable="false">
+                    <use href="/sprite.svg#check-circle" />
+                  </svg>
+                  {cond}
+                </li>
+              ))}
             </ul>
           </section>
 
@@ -149,32 +139,7 @@ export default function DetailsPage({ carId }: Props) {
             <h3 id="specs" className={s.sectionTitle}>
               Car Specifications:
             </h3>
-            <ul className={s.list}>
-              <li className={s.listItem}>
-                <svg className={s.bullet} aria-hidden focusable="false">
-                  <use href="/sprite.svg#gear" />
-                </svg>
-                Year: {car.year}
-              </li>
-              <li className={s.listItem}>
-                <svg className={s.bullet} aria-hidden focusable="false">
-                  <use href="/sprite.svg#car" />
-                </svg>
-                Type: {car.type}
-              </li>
-              <li className={s.listItem}>
-                <svg className={s.bullet} aria-hidden focusable="false">
-                  <use href="/sprite.svg#fuel-pump" />
-                </svg>
-                Fuel Consumption: {car.fuelConsumption}
-              </li>
-              <li className={s.listItem}>
-                <svg className={s.bullet} aria-hidden focusable="false">
-                  <use href="/sprite.svg#gear" />
-                </svg>
-                Engine Size: {car.engineSize}
-              </li>
-            </ul>
+            <Specs car={car} />
           </section>
 
           {/* Accessories and functionalities */}
