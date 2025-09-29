@@ -42,6 +42,6 @@ pnpm-debug.log*
 /storybook-static/
 
 # custom
-/.dev/
-/e2e/
-/.github/
+.dev
+e2e
+.github
