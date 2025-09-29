@@ -1,2 +1,2 @@
-export { default } from "./Button";
-export type { ButtonProps, ButtonVariant } from "./Button";
+export { default } from "@components/ui/Button/Button";
+export type { ButtonProps, ButtonVariant } from "@components/ui/Button/Button";

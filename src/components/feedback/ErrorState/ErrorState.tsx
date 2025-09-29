@@ -3,11 +3,8 @@ import styles from "./ErrorState.module.css";
 
 export default function ErrorState() {
   return (
-    <section className={styles.wrap}>
+    <section className={styles.wrap} role="status" aria-live="polite">
       <div className={styles.title}>Something went wrong</div>
-      <p className={styles.desc}>
-        The service is temporarily unavailable. Please try again.
-      </p>
       <Button onClick={() => location.reload()}>Try again</Button>
     </section>
   );

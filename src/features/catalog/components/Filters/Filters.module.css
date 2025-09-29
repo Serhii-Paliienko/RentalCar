@@ -78,3 +78,21 @@
 .searchBtn {
   width: 100%;
 }
+
+.wrap {
+  width: 100%;
+  margin-top: calc(var(--filters-top, 64px) - var(--header-gap, 4px));
+  margin-bottom: 32px;
+}
+
+/* ... остальное без изменений ... */
+
+.searchBtn {
+  width: 100%;
+}
+
+/* добавлено для соответствия JSX */
+.brand {
+}
+.price {
+}
