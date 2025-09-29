@@ -1,75 +1,87 @@
-.root {
-  display: inline-grid;
-  grid-template-columns: 1fr 44px; /* контент + слот иконки */
-  align-items: center;
-
-  /* ДОЛЖЕН СОВПАДАТЬ С Input: 44px */
-  height: var(--control-h, 44px);
-
-  /* как в макете — горизонтальный паддинг 14px */
-  padding-inline: 16px 0;
-
-  background: var(--inputs, #f5f6fb);
-  color: var(--main, #121417);
-  border: 1px solid var(--gray-200, #e6e8ef);
-  border-radius: 12px;
-  cursor: pointer;
-
-  transition: background-color var(--tr-fast, 0.15s ease),
-    border-color var(--tr-fast, 0.15s ease), color var(--tr-fast, 0.15s ease);
+.wrap {
+  position: relative;
+  inline-size: 100%;
 }
 
-/* Скрываем нативную стрелку и даём контролу занять всю высоту */
 .control {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  margin: 0;
-  padding: 0;
-
-  height: 100%;
-  width: 100%;
-
-  font: var(--body, 16px/20px var(--font-family));
-  color: inherit;
-  cursor: inherit;
+  inline-size: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  height: var(--control-h, 44px);
+  padding-inline: 16px;
+  border: 1px solid var(--inputs);
+  border-radius: 12px;
+  background: var(--inputs, #f5f6fb);
+  transition: background-color var(--tr-fast, 0.15s ease),
+    color var(--tr-fast, 0.15s ease), border-color var(--tr-fast, 0.15s ease),
+    box-shadow var(--tr-fast, 0.15s ease), transform var(--tr-fast, 0.15s ease);
+  cursor: pointer;
+  outline: none;
 }
 
-.control:has(option:checked[value=""]) {
+.control:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.control:focus {
+  outline: none;
+}
+.control:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--main) 55%, transparent);
+}
+
+.value {
+  font: inherit;
+  color: var(--text, #121417);
+}
+
+.value[data-placeholder="true"] {
   color: var(--main);
 }
 
-.chevron {
-  display: inline-grid;
-  place-items: center;
-}
-.iconClosed,
-.iconOpen {
-  width: 16px;
-  height: 16px;
-  line-height: 1;
+.icon {
+  inline-size: 16px;
+  block-size: 16px;
 }
 
-.root .iconOpen {
-  display: none;
-}
-.root:focus-within .iconClosed {
-  display: none;
-}
-.root:focus-within .iconOpen {
-  display: inline;
-}
-
-.root .fallback {
-  display: none;
-}
-
-.root:hover {
-  background: var(--inputs-hover, #eef1f7);
+.list {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(100% + 4px);
+  z-index: 30;
+  background: var(--white);
+  border: 1px solid var(--inputs);
+  border-radius: 12px;
+  box-shadow: 0 4px 36px 0 rgba(0, 0, 0, 0.02);
+  max-block-size: 272px;
+  overflow-y: auto;
+  padding-block: 8px;
 }
 
-.root:focus-within {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: var(--gray-200, #e6e8ef) !important;
+.list {
+  scrollbar-width: thin;
+  scrollbar-color: var(--inputs) transparent;
+}
+.list::-webkit-scrollbar {
+  width: 6px;
+}
+.list::-webkit-scrollbar-thumb {
+  background: var(--inputs);
+  border-radius: 4px;
+}
+
+.option {
+  padding: 10px 16px;
+  line-height: 1.25;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text, #121417);
+}
+.option:hover {
+  background: color-mix(in oklab, var(--main) 8%, transparent);
+}
+.optionSelected {
+  font-weight: 600;
 }

@@ -10,7 +10,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 196px 196px 320px 156px;
+  grid-template-columns: 204px 196px 320px 156px;
   gap: 16px;
   align-items: end;
   max-width: 916px;
@@ -131,7 +131,6 @@
   align-items: stretch;
   height: 44px;
   background: var(--inputs, #f5f6fb);
-  border: 1px solid var(--gray-200, #e6e8ef);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -166,8 +165,8 @@
 
 .part :global(input:focus),
 .part :global(input:focus-visible) {
-  outline: none !important;
-  box-shadow: none !important;
+  outline: none;
+  box-shadow: none;
 }
 
 .searchBtn {

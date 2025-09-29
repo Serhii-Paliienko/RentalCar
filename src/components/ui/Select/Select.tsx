@@ -1,76 +1,132 @@
-import { useState, useCallback } from "react";
-import type { SelectHTMLAttributes, FocusEvent, MouseEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import s from "./Select.module.css";
 
-type Props = SelectHTMLAttributes<HTMLSelectElement> & {
+type Option = { value: string; label: string };
+type ChangeHandler =
+  | ((value: string) => void)
+  | ((e: { target: { name: string; value: string } }) => void);
+
+type Props = {
+  options: Option[];
+  value?: string | null;
+  onChange?: ChangeHandler;
+  placeholder?: string;
+  className?: string;
   ariaLabel?: string;
   iconClosedId?: string;
   iconOpenId?: string;
+  disabled?: boolean;
+  id?: string;
+  name?: string;
+  onBlur?: (e: React.FocusEvent<any>) => void;
+  children?: React.ReactNode;
+  multiple?: boolean;
+  checked?: boolean;
 };
 
+const SPRITE = "/sprite.svg";
+
 export default function Select({
+  options,
+  value = null,
+  onChange,
+  placeholder = "Choose",
+  className,
   ariaLabel,
-  className = "",
-  iconClosedId = "#open",
-  iconOpenId = "#close",
-  onFocus,
+  iconClosedId = "open",
+  iconOpenId = "close",
+  disabled,
+  id,
+  name,
   onBlur,
-  onMouseDown,
-  children,
-  ...rest
 }: Props) {
   const [open, setOpen] = useState(false);
-  const a11y = ariaLabel || rest["aria-label"] || "Select";
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
-  const handleFocus = useCallback(
-    (e: FocusEvent<HTMLSelectElement>) => {
-      setOpen(true);
-      onFocus?.(e);
-    },
-    [onFocus]
+  const current = useMemo(
+    () => options.find((o) => o.value === value) ?? null,
+    [options, value]
   );
 
-  const handleBlur = useCallback(
-    (e: FocusEvent<HTMLSelectElement>) => {
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (!wrapRef.current) return;
+      if (wrapRef.current.contains(e.target as Node)) return;
       setOpen(false);
-      onBlur?.(e);
-    },
-    [onBlur]
-  );
-
-  const handleMouseDown = useCallback((_e: MouseEvent<HTMLLabelElement>) => {
-    setOpen(true);
+    }
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
+  function onKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "ArrowDown" || e.key === "Enter") {
+      e.preventDefault();
+      setOpen(true);
+    } else if (e.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  function commitValue(next: string) {
+    if (onChange) {
+      try {
+        if (name) {
+          (onChange as any)({ target: { name, value: next } });
+        } else {
+          (onChange as any)(next);
+        }
+      } catch {
+        (onChange as any)(next);
+      }
+    }
+    setOpen(false);
+    btnRef.current?.focus();
+  }
+
   return (
-    <label
-      className={[s.root, className].filter(Boolean).join(" ")}
-      data-open={open ? "true" : "false"}
-      aria-haspopup="listbox"
-      aria-expanded={open}
-      onMouseDown={handleMouseDown}
-    >
-      <span className="visually-hidden">{a11y}</span>
-
-      <select
-        {...rest}
-        aria-label={a11y}
+    <div className={`${s.wrap} ${className ?? ""}`} ref={wrapRef}>
+      <button
+        id={id}
+        name={name}
+        ref={btnRef}
+        type="button"
         className={s.control}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={ariaLabel}
+        onClick={() => setOpen((v) => !v)}
+        onKeyDown={onKeyDown}
+        onBlur={onBlur}
+        disabled={!!disabled}
       >
-        {children}
-      </select>
+        <span className={s.value} data-placeholder={current ? "false" : "true"}>
+          {current ? current.label : placeholder}
+        </span>
 
-      <span className={s.chevron} aria-hidden>
-        <svg className={s.iconClosed} focusable="false">
-          <use href={iconClosedId} />
+        <svg className={s.icon} aria-hidden="true" focusable="false">
+          <use href={`${SPRITE}#${open ? iconOpenId : iconClosedId}`} />
+          <use xlinkHref={`${SPRITE}#${open ? iconOpenId : iconClosedId}`} />
         </svg>
-        <svg className={s.iconOpen} focusable="false">
-          <use href={iconOpenId} />
-        </svg>
-        <span className={s.fallback}>▾</span>
-      </span>
-    </label>
+      </button>
+
+      {open && (
+        <ul role="listbox" className={s.list} tabIndex={-1}>
+          {options.map((o) => (
+            <li
+              key={o.value}
+              role="option"
+              aria-selected={o.value === value}
+              className={`${s.option} ${
+                o.value === value ? s.optionSelected : ""
+              }`}
+              onClick={() => commitValue(o.value)}
+            >
+              {o.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

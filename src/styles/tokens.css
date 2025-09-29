@@ -54,15 +54,6 @@
   --card-gap: 20px;
   --section-y: 80px;
 
-  /* Effects */
-  --focus-ring: 0 0 0 3px rgba(52, 112, 255, 0.35);
-
   /* Hero */
   --hero-img: url("/images/hero/hero-1440.jpg");
-}
-
-/* === Focus ring tokens (brand) === */
-:root {
-  --brand-500: #2d7aff;
-  --focus-ring: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 0 4px var(--brand-500);
 }

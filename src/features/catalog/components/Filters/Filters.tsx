@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Formik, Form, Field } from "formik";
 import type { FieldProps } from "formik";
 import { useQuery } from "@tanstack/react-query";
@@ -41,6 +42,16 @@ export default function Filters({ initial, onSubmit }: Props) {
     maxMileage: initial?.maxMileage ?? "",
   };
 
+  const brandOptions = useMemo(
+    () => (brands ?? []).map((b) => ({ value: b, label: b })),
+    [brands]
+  );
+
+  const priceOptions = useMemo(
+    () => PRICE_OPTIONS.map((p) => ({ value: p, label: `$${p}` })),
+    []
+  );
+
   return (
     <section className={s.wrap}>
       <Formik
@@ -73,14 +84,15 @@ export default function Filters({ initial, onSubmit }: Props) {
                 <div className={s.selectBox}>
                   <Field name="brand">
                     {({ field }: FieldProps<string>) => (
-                      <Select {...field} id="brand" ariaLabel="Car brand">
-                        <option value="">Choose a brand</option>
-                        {brands?.map((b) => (
-                          <option key={b} value={b}>
-                            {b}
-                          </option>
-                        ))}
-                      </Select>
+                      <Select
+                        {...field}
+                        id="brand"
+                        ariaLabel="Car brand"
+                        options={brandOptions}
+                        placeholder="Choose a brand"
+                        iconClosedId="open"
+                        iconOpenId="close"
+                      />
                     )}
                   </Field>
                 </div>
@@ -98,14 +110,11 @@ export default function Filters({ initial, onSubmit }: Props) {
                         {...field}
                         id="rentalPrice"
                         ariaLabel="Price per hour"
-                      >
-                        <option value="">Choose a price</option>
-                        {PRICE_OPTIONS.map((p) => (
-                          <option key={p} value={p}>
-                            ${p}
-                          </option>
-                        ))}
-                      </Select>
+                        options={priceOptions}
+                        placeholder="Choose a price"
+                        iconClosedId="open"
+                        iconOpenId="close"
+                      />
                     )}
                   </Field>
                 </div>
