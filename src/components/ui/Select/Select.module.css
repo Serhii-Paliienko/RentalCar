@@ -67,3 +67,8 @@
 .option:active {
   color: var(--main);
 }
+
+.optionSelected {
+  color: var(--main);
+  font-weight: 600;
+}

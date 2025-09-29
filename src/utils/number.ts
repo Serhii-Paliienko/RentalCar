@@ -19,9 +19,4 @@ export function normalizeRange(
   return { min: mi, max: ma };
 }
 
-export function formatMileage(n: number): string {
-  const s = Number(n || 0)
-    .toLocaleString("en-US")
-    .replace(/,/g, " ");
-  return `${s} km`;
-}
+export { formatMileage } from "./format";

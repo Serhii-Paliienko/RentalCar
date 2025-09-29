@@ -4,6 +4,7 @@ import Button from "@components/ui/Button";
 import Input from "@components/ui/Input";
 import Textarea from "@components/ui/Textarea";
 import ErrorText from "@components/forms/ErrorText";
+import { toast } from "react-hot-toast";
 import s from "./BookingForm.module.css";
 
 type Values = {
@@ -33,9 +34,7 @@ export default function BookingForm() {
         onSubmit={(values, helpers) => {
           setTimeout(() => {
             helpers.setSubmitting(false);
-            alert(
-              `Request sent:\nName: ${values.name}\nEmail: ${values.email}\nDate: ${values.date}`
-            );
+            toast.success("Your booking request was sent");
             helpers.resetForm();
           }, 400);
         }}
