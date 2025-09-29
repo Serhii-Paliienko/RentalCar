@@ -1,5 +1,5 @@
-import { api } from "./axios";
-import type { CarsQuery, CarsResponseRaw, Car } from "./types";
+import { api } from "@api/axios";
+import type { CarsQuery, CarsResponseRaw, Car } from "@api/types";
 
 function clean<T extends Record<string, unknown>>(obj: T): Partial<T> {
   const out: Partial<T> = {};
@@ -13,14 +13,10 @@ function clean<T extends Record<string, unknown>>(obj: T): Partial<T> {
 
 export async function getCars(query: CarsQuery): Promise<CarsResponseRaw> {
   const params = clean(query);
-
   const { data } = await api.get<CarsResponseRaw>("/cars", { params });
-
-  if (query.rentalPrice && Array.isArray(data.cars)) {
-    const target = String(Number(query.rentalPrice));
-    data.cars = data.cars.filter((c) => String(c.rentalPrice) === target);
+  if (!data || !Array.isArray(data.cars)) {
+    return { cars: [], totalCars: 0, page: 1, totalPages: 1 };
   }
-
   return data;
 }
 

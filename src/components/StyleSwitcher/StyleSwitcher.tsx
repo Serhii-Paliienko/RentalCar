@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import s from "./StyleSwitcher.module.css";
 
-type ThemeKey = "default" | "alt1" | "alt2";
+type ThemeKey = "light" | "dark" | "neutral";
 const STORAGE_KEY = "rental:theme";
 
 export default function StyleSwitcher() {
-  const [theme, setTheme] = useState<ThemeKey>("default");
+  const [theme, setTheme] = useState<ThemeKey>("light");
 
   useEffect(() => {
-    const saved = (localStorage.getItem(STORAGE_KEY) as ThemeKey) || "default";
+    const saved = (localStorage.getItem(STORAGE_KEY) as ThemeKey) || "light";
     setTheme(saved);
     document.documentElement.dataset.theme = saved;
   }, []);
@@ -21,7 +21,7 @@ export default function StyleSwitcher() {
 
   return (
     <div className={s.switch} role="group" aria-label="Theme switcher">
-      {(["default", "alt1", "alt2"] as ThemeKey[]).map((key) => (
+      {(["light", "dark", "neutral"] as ThemeKey[]).map((key) => (
         <button
           key={key}
           type="button"

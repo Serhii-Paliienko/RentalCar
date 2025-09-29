@@ -1,2 +1,2 @@
-export { default } from "./Textarea";
-export type { TextareaProps } from "./Textarea";
+export { default } from "@components/ui/Textarea/Textarea";
+export type { TextareaProps } from "@components/ui/Textarea/Textarea";

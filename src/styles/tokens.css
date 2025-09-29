@@ -57,3 +57,27 @@
   /* Hero */
   --hero-img: url("/images/hero/hero-1440.jpg");
 }
+
+/* Theme variants */
+[data-theme="light"] {
+  /* light = defaults; явный селектор для переключателя */
+}
+
+[data-theme="dark"] {
+  --main: #e5e7eb;
+  --white: #0b0e14;
+  --badges: #111827;
+  --inputs: #1f2937;
+  --gray: #9ca3af;
+  --gray-light: #374151;
+  --button: #60a5fa;
+  --button-hover: #3b82f6;
+  --hero-img: url("/images/hero/hero-1440.jpg");
+  background-color: var(--white);
+  color: var(--main);
+}
+
+[data-theme="neutral"] {
+  --button: #475569;
+  --button-hover: #334155;
+}
