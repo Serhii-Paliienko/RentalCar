@@ -1,7 +1,7 @@
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Button from "@components/ui/Button";
-import Input from "@components/ui/Input";
+import Input from "@features/catalog/components/Input";
 import Textarea from "@components/ui/Textarea";
 import ErrorText from "@components/forms/ErrorText";
 import { toast } from "react-hot-toast";

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import type { Car } from "@api/types";
 import { useFavorites } from "@store/favorites.store";
 import { formatMileage, formatPriceUsd } from "@utils/format";
-import Button from "@components/ui/Button/Button"; // переиспользуем общий Button
+import Button from "@components/ui/Button";
 import s from "./CarCard.module.css";
 
 function splitAddress(address: string): { city?: string; country?: string } {
@@ -18,8 +18,8 @@ function splitAddress(address: string): { city?: string; country?: string } {
 
 export default function CarCard({ car }: { car: Car }) {
   const navigate = useNavigate();
-  const isFav = useFavorites((st) => st.ids.includes(car.id));
-  const toggle = useFavorites((st) => st.toggle);
+  const { has, toggle } = useFavorites();
+  const isFav = has(car.id);
 
   const { city, country } = splitAddress(car.address);
 

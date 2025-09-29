@@ -3,6 +3,7 @@
   padding-top: 4px;
   background: var(--white);
 }
+
 .wrap {
   display: grid;
   gap: var(--sp-8, 32px);

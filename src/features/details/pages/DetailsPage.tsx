@@ -86,80 +86,106 @@ export default function DetailsPage() {
 
         {/* RIGHT */}
         <div className={s.right}>
-          <h1 className={s.title}>
-            {car.brand} {car.model}, {car.year}
-          </h1>
-
-          <div className={s.subhead}>
-            {city && (
-              <span className={s.metaItem}>
-                <svg className={s.metaIcon} aria-hidden focusable="false">
-                  <use href="/sprite.svg#location" />
-                </svg>
-                {city}
-              </span>
-            )}
-            {country && <span className={s.metaItem}>{country}</span>}
-
-            <span className={s.metaItem}>
-              <svg className={s.metaIcon} aria-hidden focusable="false">
-                <use href="/sprite.svg#car" />
-              </svg>
-              {formatMileage(car.mileage)}
-            </span>
-
-            <span className={s.metaItem}>id: {car.id}</span>
-          </div>
-
-          <div className={s.price}>{formatPriceUsd(car.rentalPrice)}</div>
-
-          {car.description && (
-            <p className={s.description}>{car.description}</p>
-          )}
-
-          {/* Rental Conditions */}
-          <section className={s.section} aria-labelledby="rc">
-            <h3 id="rc" className={s.sectionTitle}>
-              Rental Conditions:
-            </h3>
-            <ul className={s.list}>
-              {(car.rentalConditions ?? []).map((cond) => (
-                <li key={cond} className={s.listItem}>
-                  <svg className={s.bullet} aria-hidden focusable="false">
-                    <use href="/sprite.svg#check-circle" />
+          <div>
+            <h1 className={s.title}>
+              {car.brand} {car.model}, {car.year}
+              <span className={s.itemId}>id: {car.id}</span>
+            </h1>
+            <div className={s.subhead}>
+              {city && (
+                <span className={s.metaItem}>
+                  <svg className={s.metaIcon} aria-hidden focusable="false">
+                    <use href="/sprite.svg#location" />
                   </svg>
-                  {cond}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          {/* Car Specifications */}
-          <section className={s.section} aria-labelledby="specs">
-            <h3 id="specs" className={s.sectionTitle}>
-              Car Specifications:
-            </h3>
-            <Specs car={car} />
-          </section>
-
-          {/* Accessories and functionalities */}
-          <section className={s.section} aria-labelledby="acc">
-            <h3 id="acc" className={s.sectionTitle}>
-              Accessories and functionalities:
-            </h3>
-            <div className={s.chips}>
-              {car.accessories.map((a) => (
-                <span key={`a-${a}`} className={s.chip}>
-                  {a}
+                  {city},{" "}
+                  {country && <span className={s.metaItem}>{country}</span>}
                 </span>
-              ))}
-              {car.functionalities.map((f) => (
-                <span key={`f-${f}`} className={s.chip}>
-                  {f}
-                </span>
-              ))}
+              )}
+
+              <span className={s.metaItem}>
+                Mileage: {formatMileage(car.mileage)}
+              </span>
             </div>
-          </section>
+            <div className={s.price}>{formatPriceUsd(car.rentalPrice)}</div>
+            {car.description && (
+              <p className={s.description}>{car.description}</p>
+            )}
+            {/* Rental Conditions */}
+            <section className={s.section} aria-labelledby="rc">
+              <h3 id="rc" className={s.sectionTitle}>
+                Rental Conditions:
+              </h3>
+              <ul className={s.list}>
+                {(car.rentalConditions ?? []).map((cond) => (
+                  <li key={cond} className={s.listItem}>
+                    <svg className={s.bullet} aria-hidden focusable="false">
+                      <use href="/sprite.svg#check-circle" />
+                    </svg>
+                    {cond}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+          <div className={s.sectionWrapper}>
+            {/* Car Specifications */}
+            <section className={s.section} aria-labelledby="specs">
+              <h3 id="specs" className={s.sectionTitle}>
+                Car Specifications:
+              </h3>
+              <div className={s.list}>
+                <span className={s.specs}>
+                  <svg className={s.metaIcon} aria-hidden focusable="false">
+                    <use href="/sprite.svg#calendar" />
+                  </svg>
+                  Year: {car.year}
+                </span>
+                <span className={s.specs}>
+                  <svg className={s.metaIcon} aria-hidden focusable="false">
+                    <use href="/sprite.svg#car" />
+                  </svg>
+                  Type: {car.type}
+                </span>
+                <span className={s.specs}>
+                  <svg className={s.metaIcon} aria-hidden focusable="false">
+                    <use href="/sprite.svg#fuel-pump" />
+                  </svg>
+                  Fuel Consumption: {car.fuelConsumption}
+                </span>
+                <span className={s.specs}>
+                  <svg className={s.metaIcon} aria-hidden focusable="false">
+                    <use href="/sprite.svg#gear" />
+                  </svg>
+                  Engine Size: {car.engineSize}
+                </span>
+              </div>
+            </section>
+
+            {/* Accessories and functionalities */}
+            <section className={s.section} aria-labelledby="acc">
+              <h3 id="acc" className={s.sectionTitle}>
+                Accessories and functionalities:
+              </h3>
+              <div className={s.list}>
+                {car.accessories.map((a) => (
+                  <span key={`a-${a}`} className={s.listItem}>
+                    <svg className={s.bullet} aria-hidden focusable="false">
+                      <use href="/sprite.svg#check-circle" />
+                    </svg>
+                    {a}
+                  </span>
+                ))}
+                {car.functionalities.map((f) => (
+                  <span key={`f-${f}`} className={s.listItem}>
+                    <svg className={s.bullet} aria-hidden focusable="false">
+                      <use href="/sprite.svg#check-circle" />
+                    </svg>
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </section>
+          </div>
         </div>
       </div>
     </main>
