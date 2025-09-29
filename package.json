@@ -30,8 +30,11 @@
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "@vitejs/plugin-react": "latest",
+    "es-module-lexer": "^1.7.0",
     "eslint": "latest",
     "eslint-plugin-react": "latest",
+    "fast-glob": "^3.3.3",
+    "magic-string": "^0.30.19",
     "typescript": "latest",
     "vite": "latest",
     "vite-tsconfig-paths": "latest"

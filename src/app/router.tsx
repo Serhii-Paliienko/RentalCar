@@ -3,7 +3,7 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import Header from "@components/Header/Header";
 import Seo from "@components/Seo/Seo";
 
-const HomePage = lazy(() => import("@pages/HomePage/HomePage"));
+const HomePage = lazy(() => import("@features/home/pages/HomePage"));
 const CatalogPage = lazy(() => import("@features/catalog/pages/CatalogPage"));
 const DetailsPage = lazy(() => import("@features/details/pages/DetailsPage"));
 const NotFound = lazy(() => import("@pages/NotFound/NotFound"));
