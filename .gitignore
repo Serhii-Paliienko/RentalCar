@@ -45,3 +45,4 @@ pnpm-debug.log*
 .dev
 e2e
 .github
+reports
