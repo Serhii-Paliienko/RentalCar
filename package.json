@@ -35,6 +35,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "typescript": "latest",
+    "typescript-eslint": "^8.45.0",
     "vite": "latest",
     "vite-tsconfig-paths": "latest"
   },

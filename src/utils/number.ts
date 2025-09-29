@@ -11,8 +11,8 @@ export function normalizeRange(
   min: string | number | null | undefined,
   max: string | number | null | undefined
 ): { min: string; max: string } {
-  const mi = normalizeIntString(min as any);
-  const ma = normalizeIntString(max as any);
+  const mi = normalizeIntString(min);
+  const ma = normalizeIntString(max);
   if (mi && ma && Number(mi) > Number(ma)) {
     return { min: ma, max: mi };
   }

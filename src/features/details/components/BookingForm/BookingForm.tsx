@@ -17,7 +17,7 @@ type Values = {
 const initialValues: Values = { name: "", email: "", date: "", comment: "" };
 
 const Schema = Yup.object({
-  name: Yup.string().trim().min(5, "Too short").required("Required"),
+  name: Yup.string().trim().min(2, "Too short").required("Required"),
   email: Yup.string().trim().email("Invalid email").required("Required"),
   date: Yup.string().trim().required("Required"),
   comment: Yup.string().trim().max(500, "Max 500 chars"),
