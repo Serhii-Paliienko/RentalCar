@@ -16,7 +16,7 @@ export type Car = {
   engineSize: string;
   accessories: string[];
   functionalities: string[];
-  rentalPrice: string; // "40"
+  rentalPrice: string;
   rentalCompany: string;
   address: string;
   rentalConditions: string[];
