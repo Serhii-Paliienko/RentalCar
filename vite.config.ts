@@ -7,7 +7,6 @@ export default defineConfig({
     react(),
     tsconfigPaths({
       projects: ["tsconfig.app.json", "tsconfig.node.json"],
-      ignoreConfigErrors: true,
     }),
   ],
 });

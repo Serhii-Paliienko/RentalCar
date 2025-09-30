@@ -29,7 +29,7 @@ npm run preview
   - `/catalog/:id` Car details + booking form
   - 404 catch‑all **and** error boundary (`errorElement`)
 
-- **Backend Filters (per TЗ)**
+- **Backend Filters**
 
   - Brand (single)
   - **Price**: UI shows **strict N** (backend returns a superset `≤ N`, UI narrows to `=== N`)
