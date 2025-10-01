@@ -43,6 +43,3 @@ pnpm-debug.log*
 
 # custom
 .dev
-e2e
-.github
-reports
